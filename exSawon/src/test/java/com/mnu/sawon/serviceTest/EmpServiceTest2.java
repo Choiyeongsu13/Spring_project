@@ -22,6 +22,7 @@ public class EmpServiceTest2 {
 	@Test
 	public void empCountTest2() {
 		log.info("service : " +  service2.EmpCount());
+		
 	}
 
 }
