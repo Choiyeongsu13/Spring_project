@@ -1,0 +1,12 @@
+spring:
+     application:
+           name: exSawon
+#oracle
+     datasource:
+           driver-class-name: oracle.jdbc.OracleDriver
+           url: jdbc:oracle:thin:@localhost:1521/xe
+           username: c##sample					 
+           password: 1234
+
+mybatis:
+     mapper-locations : classpath:/com/mnu/sawon/mappers/**/*.xml

@@ -1,0 +1,11 @@
+package com.mnu.myBatis.domain;
+
+import lombok.Data;
+
+@Data //lombook
+public class DeptDTO{
+	private int dno;
+	private String dname;
+	private String loc;
+	
+}
