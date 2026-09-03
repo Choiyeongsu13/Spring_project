@@ -48,7 +48,7 @@
      <p align="center"><font color="white" size="2"><b><a href="/Notice/notice_list" class="white">공지사항</a></b></font></p>
      </td>
      <td bgcolor="#9966ff" width="10%" onmouseover="style.backgroundColor='#2772D3'" onmouseout="style.backgroundColor=''">
-     <p align="center"><font color="white" size="2"><b><a href="/Board/board_list" class="white">자유게시판</a></b></font></p>
+     <p align="center"><font color="white" size="2"><b><a href="/Board/board_list?page=1" class="white">자유게시판</a></b></font></p>
      </td>
      <td bgcolor="#9966ff" width="10%" onmouseover="style.backgroundColor='#2772D3'" onmouseout="style.backgroundColor=''">
      <p align="center"><font color="white" size="2"><b><a href="/BoardPhoto/board_list" class="white">포토게시판</a></b></font></p>

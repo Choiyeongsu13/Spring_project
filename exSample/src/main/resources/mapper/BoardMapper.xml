@@ -7,7 +7,7 @@
 	</select>
 	
 	<!-- 2. 검색 조건에 해당하는 글수 post -->
-<select id ="BoardCountSearch" resultType="string">
+<select id ="BoardCountSearch" resultType="int">
 	select count(*) from tbl_board where 
 	<choose> <!-- 스위치 케이스 -->
 		<when test="search=='name'" >
@@ -24,6 +24,7 @@
 		
 	</choose>
 </select>
+
 
 
 <!--  2. 검색 조건에 해당하는 글수 MySql(MariaDB) -->
@@ -52,6 +53,9 @@
 <select id ="BoardList" resultType="com.mnu.sample.domain.BoardDTO">
 		select * from tbl_board order by idx desc
 </select>
+
+
+
 	
 	<!-- 4. 검색조건에 맞는 목록 post -->
 <select id="BoardListSearch" resultType="com.mnu.sample.domain.BoardDTO">
@@ -72,6 +76,37 @@
 		order by idx desc
 </select>
 	
+<!-- 3-1 전체 목록 리스트 (페이지 인덱싱)-->
+<select id="BoardListPage" resultType="com.mnu.sample.domain.BoardDTO">
+
+	select * from tbl_board order by idx desc 
+		offset #{offset} rows fetch next #{maxlist} rows only
+</select>
+<!-- 4-1 검색조건 + 목록 리스트-->
+<select id="BoardListSearchPage" resultType="com.mnu.sample.domain.BoardDTO">
+			select * from tbl_board
+				<choose>
+			<when test ="search=='name'">
+				where name like '%' || #{key} || '%'
+			</when>
+			<when test ="search=='subject'">
+				where subject like '%' || #{key} || '%'
+			</when>
+			<when test ="search=='contents'">
+				where contents like '%' || #{key} || '%'
+			</when>
+
+		</choose>
+		
+			order by idx desc 
+		offset #{offset} rows fetch next #{maxlist} rows only
+		
+</select>
+	
+	
+	
+	
+	
 	<!-- 5. 글 등록 -->
 	
 	<insert id="BoardWrite">
@@ -79,8 +114,24 @@
 		, #{contents}, #{pass})
 	</insert>
 	<!-- 6. 특정글 검색 (view, modify  -->
+
+	<update id ="BoardHits">
+		update tbl_board set readcnt = readcnt +1 where idx = #{idx}
+	</update>
+	<select id ="boardview" resultType="com.mnu.sample.domain.BoardDTO" >
+			select * from tbl_board where idx = #{idx}
+	</select>
+	
+	
 	<!-- 7. 수정처리  -->
+	<update id="boardModifyPro">
+		update tbl_board set email=#{email}, subject=#{subject}, contents=#{contents}
+		where idx = #{idx} and pass = #{pass}
+	</update>
 	<!-- 8. 삭제처리  -->
+		<delete id="boardDeletePro">
+			delete from tbl_board where idx = #{idx} and pass = #{pass}
+		</delete>
 	
 	
 </mapper>
