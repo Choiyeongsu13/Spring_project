@@ -38,8 +38,8 @@ public class BoardService {
 
 
 	//5. 글 등록
-	public int BoardWrite(BoardDTO bdto) {
-		return Boardmapper.BoardWrite(bdto);
+	public int BoardWrite(BoardDTO boardDTO) {
+		return Boardmapper.BoardWrite(boardDTO);
 	}
 
 	//6. 특정글 검색 (view, modify)

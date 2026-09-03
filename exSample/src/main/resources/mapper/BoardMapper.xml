@@ -75,7 +75,7 @@
 	<!-- 5. 글 등록 -->
 	
 	<insert id="BoardWrite">
-		insert into tbl_board (name,subject,contents,pass) values(#{name},#{subject}
+		insert into tbl_board (idx,name,subject,contents,pass) values(tbl_board_seq_idx.nextval, #{name},#{subject}
 		, #{contents}, #{pass})
 	</insert>
 	<!-- 6. 특정글 검색 (view, modify  -->

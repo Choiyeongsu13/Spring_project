@@ -23,7 +23,7 @@ public interface BoardMapper {
 
 
 	//5. 글 등록
-	public int BoardWrite(BoardDTO bdto);
+	public int BoardWrite(BoardDTO boardDTO);
 
 	//6. 특정글 검색 (view, modify)
 
