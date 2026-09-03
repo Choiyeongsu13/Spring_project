@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <%@ include file="../Include/topmenu.jsp" %>
  <html>
  <head><meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
@@ -10,7 +10,12 @@
      td.content { padding:10px; line-height:1.6em; text-align:justify; }
      a.list { text-decoration:none;color:black;font-size:10pt; }
    </style>
-
+<script>
+	function board_delete(){
+		var url="/Board/board_delete?idx=${board.idx}&page=${page}";
+		window.open(url,"board_delete","width=350, height=250");
+	}
+</script>
  </head>
  <body topmargin="0" leftmargin="0">
    <table border="0" width="800">
@@ -38,9 +43,9 @@
          <tr>
            <td class="content">
              <p align="right"><font size="2" face="돋움">
-              <a class="list" href="mailto:${board.email}">${board.name}</a> / <font size="2" face="돋움">${board.readcnt}번 읽음</font>
-             <p>
-             ${board.contents}<p><!--contents의 내용을 <BR>태그로 처리-->
+              <a class="list" href="mailto:ein1027@nate.com">${board.name}</a> / 
+              	<font size="2" face="돋움">${board.regdate} / ${board.readcnt}번 읽음</font>
+             <p>${board.contents}<p><!--contents의 내용을 <BR>태그로 처리-->
            </td>
          </tr>
        </table>
@@ -51,11 +56,14 @@
        <!-- 새글쓰기 -->
        <a href="/Board/board_write?page=${page}">
        <img src="/Images/img/write.jpg" border="0"></a>&nbsp;&nbsp;
+	   <!-- 답글쓰기 -->
+       <a href="">
+       <img src="/Images/img/reply.gif" border="0"></a>&nbsp;&nbsp;
 	   <!-- 수정하기 -->
-       <a href="/Board/board_modify?page=${page}&idx=${board.idx}">
+       <a href="/Board/board_modify?idx=${board.idx}&page=${page}">
        <img src="/Images/img/edit.gif" border="0"></a>&nbsp;&nbsp;
-        <!-- 삭제하기 -->
-       <a href="/Board/board_delete?page=${page}&idx=${board.idx}"><img src="/Images/img/del.gif" border="0"></a>&nbsp;&nbsp;
+         <!-- 삭제하기 -->
+       <a href="javascript:board_delete();"><img src="/Images/img/del.gif" border="0"></a>&nbsp;&nbsp;
        <!-- 목록보기 -->
        <a href="/Board/board_list?page=${page}"><img src="/Images/img/list-2.gif" border="0"></a>&nbsp;&nbsp;
       </font>
@@ -64,4 +72,3 @@
   </table>
   </body>
   </html>
-

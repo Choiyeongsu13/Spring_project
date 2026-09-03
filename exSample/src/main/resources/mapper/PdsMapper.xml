@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mnu.sample.mapper.PdsMapper">
+	<!-- 1. 전체 글 카운터 get -->
+	<select id = "PdsCount" resultType="int">
+		select count(*) from tbl_Pds
+	</select>
+	
+	<!-- 2. 검색 조건에 해당하는 글수 post -->
+<select id ="PdsCountSearch" resultType="int">
+	select count(*) from tbl_Pds where 
+	<choose> <!-- 스위치 케이스 -->
+		<when test="search=='name'" >
+		<!-- 동시에 get,post를 처리할경우 where 이 여기에 붙음 -->	name like '%' ||  #{key} || '%'
+		</when>
+		
+		<when test="search=='subject'" >
+			subject like '%' ||  #{key} || '%'
+		</when>
+		
+		<when test="search=='contents'" >
+			contents like '%' ||  #{key} || '%'
+		</when>
+		
+	</choose>
+</select>
+
+
+
+<!--  2. 검색 조건에 해당하는 글수 MySql(MariaDB) -->
+<!-- 
+	<select id ="PdsCountSearch" resultType="string">
+		select count(*) from tbl_Pds where 
+		<choose> 
+			<when test="search=='name'" >
+				name like  concat ('%', #{key} ,'%')
+			</when>
+		
+		<when test="search=='subject'" >
+			subject like concat ('%', #{key}, '%')
+		</when>
+		
+		<when test="search=='contents'" >
+			contents like concat ('%' ,  #{key} , '%')
+		</when>
+		
+	</choose>
+</select>
+-->
+	
+
+<!-- 4-1 검색조건 + 목록 리스트-->
+<select id="PdsList" resultType="com.mnu.sample.domain.PdsDTO">
+			select * from tbl_Pds
+				<choose>
+			<when test ="search=='name'">
+				where name like '%' || #{key} || '%'
+			</when>
+			<when test ="search=='subject'">
+				where subject like '%' || #{key} || '%'
+			</when>
+			<when test ="search=='contents'">
+				where contents like '%' || #{key} || '%'
+			</when>
+
+		</choose>
+		
+			order by idx desc 
+		offset #{offset} rows fetch next #{maxlist} rows only
+		
+</select>
+	
+	
+	
+	
+	
+	<!-- 5. 글 등록 -->
+	
+	<insert id="PdsWrite">
+		insert into tbl_Pds (idx,name,subject,contents,pass, filename) values(tbl_Pds_seq_idx.nextval, #{name},#{subject}
+		, #{contents}, #{pass}, #{filename)
+	</insert>
+	<!-- 6. 특정글 검색 (view, modify  -->
+
+	<update id ="PdsHits">
+		update tbl_Pds set readcnt = readcnt +1 where idx = #{idx}
+	</update>
+	<select id ="Pdsview" resultType="com.mnu.sample.domain.PdsDTO" >
+			select * from tbl_Pds where idx = #{idx}
+	</select>
+	
+	
+	<!-- 7. 수정처리  -->
+	<update id="PdsModifyPro">
+		update tbl_Pds set email=#{email}, subject=#{subject}, contents=#{contents}, filename=#{filename}
+		where idx = #{idx} and pass = #{pass}
+	</update>
+	<!-- 8. 삭제처리  -->
+		<delete id="PdsDeletePro">
+			delete from tbl_Pds where idx = #{idx} and pass = #{pass}
+		</delete>
+	
+	
+</mapper>
+ 

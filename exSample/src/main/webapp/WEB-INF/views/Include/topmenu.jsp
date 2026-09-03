@@ -54,7 +54,7 @@
      <p align="center"><font color="white" size="2"><b><a href="/BoardPhoto/board_list" class="white">포토게시판</a></b></font></p>
      </td>
      <td bgcolor="#9966ff" width="10%" onmouseover="style.backgroundColor='#2772D3'" onmouseout="style.backgroundColor=''">
-     <p align="center"><font color="white" size="2"><b><a href="/Pds/pds_list" class="white">자료실</a></b></font></p>
+     <p align="center"><font color="white" size="2"><b><a href="/Pds/pds_list?page=1" class="white">자료실</a></b></font></p>
      </td>
      <td bgcolor="#9966ff" width="10%" onmouseover="style.backgroundColor='#2772D3'" onmouseout="style.backgroundColor=''">
      <p align="center"><font color="white" size="2"><b><a href="/Gallery/gallery_list" class="white">겔러리</a></b></font></p>
@@ -65,11 +65,11 @@
    </tr>                   
    <tr>
      <td colspan="8">
-     <p><img src="/Include/img/bar-01.gif" width="100%" height="1" border="0"></p>
+     <p><img src="../Include/img/bar-01.gif" width="100%" height="1" border="0"></p>
      </td>
    </tr>
    <tr>
-     <td colspan="8"><p><img src="/Include/img/bar-01.gif" width="100%" height="1" border="0"></p></td>
+     <td colspan="8"><p><img src="../Include/img/bar-01.gif" width="100%" height="1" border="0"></p></td>
    </tr>
    <tr>
      <td><p><b><span style="font-size:15pt;">&nbsp;Search</span></b></p></td>

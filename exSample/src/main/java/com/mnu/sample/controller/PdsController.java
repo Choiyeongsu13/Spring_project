@@ -20,19 +20,21 @@ public class PdsController {
 		log.info("pds call : list");
 		return"Pds/pds_list"; //view는 기본
 	}
+	
+	//등록폼
+	@GetMapping("pds_write") 
+	public String PdsWrite() {
 
+		log.info("pds call : write");
+		return"Pds/pds_write";
+	}
+
+	
 	@GetMapping("pds_view") // 자료실 보기
 	public String Pdsview() {
 
 		log.info("pds call : view");
 		return"Pds/pds_view"; //view는 기본
-	}
-
-	@GetMapping("pds_write") //자료실 글쓰기
-	public String PdsWrite() {
-
-		log.info("pds call : write");
-		return"Pds/pds_write"; //view는 기본
 	}
 
 	@GetMapping("pds_delete") //자료실 삭제

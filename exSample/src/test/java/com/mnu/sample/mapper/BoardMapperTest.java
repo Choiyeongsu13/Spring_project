@@ -56,7 +56,7 @@ public class BoardMapperTest {
 		dto.setMaxlist(10);
 		dto.setSearch("name");
 		dto.setKey("최씨");
-		boardmapper.BoardListSearchPage(dto).forEach(board->log.info(board.toString()));
+		boardmapper.boardListSearchPage(dto).forEach(board->log.info(board.toString()));
 	}
 	
 	

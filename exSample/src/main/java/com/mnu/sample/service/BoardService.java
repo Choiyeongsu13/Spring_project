@@ -16,95 +16,89 @@ import jakarta.servlet.http.HttpServletResponse;
 @Service
 public class BoardService {
 	@Autowired
-	private BoardMapper Boardmapper;
+	private BoardMapper boardMapper;
 	
-	//메소드 정의
-	//1. 전체 글 카운터
-	public int BoardCount() {
-		return Boardmapper.BoardCount();
-	}
-
-	//2. 검색 조건에 해당하는 글수
-	public int BoardCountSearch(String search, String key) {
-
-		return Boardmapper.BoardCountSearch(search, key);
-	}
-
-	//3. 전체 목록
-	public List<BoardDTO> BoardList(){
-		return Boardmapper.BoardList();
-		
-	}
-	//3-1. 전체 목록 (패이지 인덱싱)
-	public List<BoardDTO> BoardListPage(PageSearchDTO pagesearchDTO){
-		
-		return Boardmapper.BoardListPage(pagesearchDTO);
-	}
-
-	//4. 검색조건에 맞는 목록
-	public List<BoardDTO> BoardListSearch(String search, String key){
-		return Boardmapper.BoardListSearch(search, key);
+	//1. 전체 글수 카운트
+	public int boardCount() {
+		//int row = boardMapper.boardCount();
+		//row++;
+		//return row;
+		return boardMapper.boardCount();
 	}
 	
-	//4-1. 검색조건에 맞는 목록(페이지 인덱싱)
-	public List<BoardDTO> BoardListSearchPage(PageSearchDTO pagesearchDTO){
-		return Boardmapper.BoardListSearchPage(pagesearchDTO);
+	//2. 검색조건에 해당하는 글수
+	public int boardCountSearch(String search, String key) {
+		return boardMapper.boardCountSearch(search, key);
+	}
+	
+	//3. 전체목록 리스트
+	public List<BoardDTO> boardList(){
+		return boardMapper.boardList();
+	}
+	
+	//3-1. 전체목록 리스트(페이지 인덱싱)
+	public List<BoardDTO> boardListPage(PageSearchDTO pageSearchDTO){
+		return boardMapper.boardListPage(pageSearchDTO);
+	}
+	
+	//4. 검색조건에 맞는 글 리스트
+	public List<BoardDTO> boardListSearch(String search, String key){
+		return boardMapper.boardListSearch(search, key);
 	}
 
-
-
-	//5. 글 등록
-	public int BoardWrite(BoardDTO boardDTO) {
-		return Boardmapper.BoardWrite(boardDTO);
+	//4-1. 검색조건 + 페이지 인덱싱 리스트
+	public List<BoardDTO> boardListSearchPage(PageSearchDTO pageSearchDTO){
+		return boardMapper.boardListSearchPage(pageSearchDTO);
 	}
 
-	//6. 특정글 검색 (view, modify)
-	public BoardDTO boardview(int idx, HttpServletRequest request, HttpServletResponse response) {
-		//쿠키체크 (조회수 중복 증가 방지)
+	//5. 글 등록 
+	public int boardWrite(BoardDTO boardDTO) {
+		return boardMapper.boardWrite(boardDTO);
+	}
+	//6. 특정글 검색(view, 수정), 조회수 증가
+	public BoardDTO boardView(int idx,  HttpServletRequest request, HttpServletResponse response) {
+		//쿠키설정
 		boolean bool = false;
+		Cookie info = null;
 		Cookie[] cookies = request.getCookies();
-		if(cookies != null) {
-			for(int i=0; i<cookies.length; i++) {
-				if(cookies[i].getName().equals("boardCookie" + idx)) {
-					bool = true;
-					break;
-				}
+		for(int i=0; i<cookies.length; i++) {
+			info = cookies[i];
+			if(info.getName().equals("boardCookie"+idx)) {
+				bool = true;
+				break;
 			}
 		}
-		String str = "" + System.currentTimeMillis();
+		String str = ""+System.currentTimeMillis();
 		if(!bool) {
-			//쿠키가 없을 때만 조회수 증가 + 쿠키생성
-			
-			
-			Cookie info = new Cookie("boardCookie" + idx, str);
-//			info.setMaxAge(60 * 60 * 24); //하루동안 유지
-			info.setMaxAge(60 * 5); //5분동안 유지
+			//쿠키생성
+			info = new Cookie("boardCookie"+idx, str);
+			//info.setMaxAge(24*60*60);//1일
+			info.setMaxAge(60*5);//5분
 			response.addCookie(info);
-			Boardmapper.BoardHits(idx);
+			boardMapper.boardHits(idx);	
 		}
-
-		BoardDTO board = Boardmapper.boardview(idx);
+		
+		BoardDTO board = boardMapper.boardView(idx);
 		board.setContents(board.getContents().replace("\n", "<br>"));
-
+		
 		return board;
-	}
-	
-	
-
-	//7. 수정(폼)
-	
-	public BoardDTO boardModify(int idx) {
-		return Boardmapper.boardview(idx);
+		
 	}
 	//7. 수정처리(폼)
-	
+	public BoardDTO boardModify(int idx) {
+		return boardMapper.boardView(idx);
+	}
+
+	//7. 수정처리(처리)
 	public int boardModifyPro(BoardDTO boardDTO) {
-		return Boardmapper.boardModifyPro(boardDTO);
+		
+		return boardMapper.boardModifyPro(boardDTO);
 	}
 
 	//8. 삭제처리
-	public int boardDeletePro(int idx, String pass) {
-		return Boardmapper.boardDeletePro(idx, pass);
+	public int boardDelete(BoardDTO boardDTO) {
+		
+		return boardMapper.boardDelete(boardDTO);
 	}
 
 }

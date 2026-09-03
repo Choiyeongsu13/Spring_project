@@ -31,7 +31,7 @@
         <img src="/Images/img/bullet-01.gif"> <b>참 좋은 자료들</b></font></td></tr>
       <tr>
         <td colspan="7" align="right" valign="middle" height="20">
-		  <font size="2" face="고딕">전체 : <b>5</b>건 </font>
+		  <font size="2" face="고딕">전체 : <b>${totcount}</b>건 </font>
 		</td>
 	  </tr>
 	  <tr bgcolor="e3e9ff">
@@ -91,7 +91,7 @@
 				</table>
 			</td>
 			<td width="25%" align="right">
-			<a href="#"><img src="/Images/img/write.gif" border="0"></a>
+			<a href="/Pds/pds_write?page=${page}"><img src="/Images/img/write.gif" border="0"></a>
 			</td>
 		</tr>
 	</table>
