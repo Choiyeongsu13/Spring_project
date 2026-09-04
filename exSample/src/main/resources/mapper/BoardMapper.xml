@@ -2,12 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mnu.sample.mapper.BoardMapper">
 	<!-- 1. 전체 글 카운터 get -->
-	<select id = "BoardCount" resultType="int">
+	<select id = "boardCount" resultType="int">
 		select count(*) from tbl_board
 	</select>
 	
 	<!-- 2. 검색 조건에 해당하는 글수 post -->
-<select id ="BoardCountSearch" resultType="int">
+<select id ="boardCountSearch" resultType="int">
 	select count(*) from tbl_board where 
 	<choose> <!-- 스위치 케이스 -->
 		<when test="search=='name'" >
@@ -50,7 +50,7 @@
 
 
 	<!-- 3. 전체 목록 get-->
-<select id ="BoardList" resultType="com.mnu.sample.domain.BoardDTO">
+<select id ="boardList" resultType="com.mnu.sample.domain.BoardDTO">
 		select * from tbl_board order by idx desc
 </select>
 
@@ -58,7 +58,7 @@
 
 	
 	<!-- 4. 검색조건에 맞는 목록 post -->
-<select id="BoardListSearch" resultType="com.mnu.sample.domain.BoardDTO">
+<select id="boardListSearch" resultType="com.mnu.sample.domain.BoardDTO">
 		select * from tbl_board where 
 		<choose>
 			<when test ="search=='name'">
@@ -77,13 +77,13 @@
 </select>
 	
 <!-- 3-1 전체 목록 리스트 (페이지 인덱싱)-->
-<select id="BoardListPage" resultType="com.mnu.sample.domain.BoardDTO">
+<select id="boardListPage" resultType="com.mnu.sample.domain.BoardDTO">
 
 	select * from tbl_board order by idx desc 
 		offset #{offset} rows fetch next #{maxlist} rows only
 </select>
 <!-- 4-1 검색조건 + 목록 리스트-->
-<select id="BoardListSearchPage" resultType="com.mnu.sample.domain.BoardDTO">
+<select id="boardListSearchPage" resultType="com.mnu.sample.domain.BoardDTO">
 			select * from tbl_board
 				<choose>
 			<when test ="search=='name'">
@@ -109,16 +109,16 @@
 	
 	<!-- 5. 글 등록 -->
 	
-	<insert id="BoardWrite">
+	<insert id="boardWrite">
 		insert into tbl_board (idx,name,subject,contents,pass) values(tbl_board_seq_idx.nextval, #{name},#{subject}
 		, #{contents}, #{pass})
 	</insert>
 	<!-- 6. 특정글 검색 (view, modify  -->
 
-	<update id ="BoardHits">
+	<update id ="boardHits">
 		update tbl_board set readcnt = readcnt +1 where idx = #{idx}
 	</update>
-	<select id ="boardview" resultType="com.mnu.sample.domain.BoardDTO" >
+	<select id ="boardView" resultType="com.mnu.sample.domain.BoardDTO" >
 			select * from tbl_board where idx = #{idx}
 	</select>
 	
@@ -129,7 +129,7 @@
 		where idx = #{idx} and pass = #{pass}
 	</update>
 	<!-- 8. 삭제처리  -->
-		<delete id="boardDeletePro">
+		<delete id="boardDelete">
 			delete from tbl_board where idx = #{idx} and pass = #{pass}
 		</delete>
 	

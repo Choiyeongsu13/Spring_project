@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mnu.sample.domain.PdsDTO;
+import com.mnu.sample.domain.BoardDTO;
 import com.mnu.sample.domain.PageSearchDTO;
 import com.mnu.sample.mapper.PdsMapper;
 
@@ -31,11 +32,24 @@ public class PdsService {
 	}
 
 	//3. 검색조건에 맞는 목록
-	public List<PdsDTO> PdsList(PageSearchDTO pageSearchDTO){
-		return Pdsmapper.PdsList(pageSearchDTO);
+	public List<PdsDTO> PdsList(){
+		return Pdsmapper.PdsList();
+	}
+	
+	//3-1. 전체목록 리스트(페이지 인덱싱)
+	public List<PdsDTO> PdsListPage(PageSearchDTO pageSearchDTO){
+		return Pdsmapper.pdsListPage(pageSearchDTO);
+	}
+	
+	//4. 검색조건에 맞는 글 리스트
+	public List<PdsDTO> PdsListSearch(String search, String key){
+		return Pdsmapper.pdsListSearch(search, key);
 	}
 
-
+	//4-1. 검색조건 + 페이지 인덱싱 리스트
+	public List<PdsDTO> PdsListSearchPage(PageSearchDTO pageSearchDTO){
+		return Pdsmapper.pdsListSearchPage(pageSearchDTO);
+	}
 
 
 	//5. 글 등록
@@ -44,7 +58,7 @@ public class PdsService {
 	}
 
 	//6. 특정글 검색 (view, modify)
-	public PdsDTO Pdsview(int idx) {
+	public PdsDTO Pdsview(int idx, HttpServletRequest request, HttpServletResponse response) {
 		return Pdsmapper.Pdsview(idx);
 	}
 	

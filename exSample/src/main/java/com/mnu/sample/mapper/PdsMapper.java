@@ -18,7 +18,17 @@ public interface PdsMapper {
 	public int PdsCountSearch(String search, String key);
 
 	//3. 검색조건에 맞는 목록(페이지 인덱싱)
-	public List<PdsDTO> PdsList(PageSearchDTO pagesearchDTO);
+	public List<PdsDTO> PdsList();
+
+	//3-1. 전체목록 리스트(페이지 인덱싱)
+	public List<PdsDTO> pdsListPage(PageSearchDTO pageSearchDTO);
+
+	//4. 검색조건에 맞는 글 리스트
+	public List<PdsDTO> pdsListSearch(String search, String key);
+
+	//4-1. 검색조건 + 페이지 인덱싱 리스트
+	public List<PdsDTO> pdsListSearchPage(PageSearchDTO pageSearchDTO);
+
 
 	//4. 글 등록
 	public int PdsWrite(PdsDTO PdsDTO);
