@@ -12,6 +12,12 @@
      a.list { text-decoration:none;color:black;font-size:10pt; }
    </style>
  </head>
+ <script>
+ 	function pds_delete(){
+ 		var url="/Pds/pds_delete?idx=${pds.idx}&page=${page}";
+ 		window.open(url,"pds_delete","width=350,height=250");
+ 	}
+ 	</script>
 
    <!--DB에서 검색한 자료를 화면에 출력  -->
  <body topmargin="0" leftmargin="0">
@@ -36,24 +42,30 @@
      <table border="0" width="90%" align="center" cellspacing="0" style="border-width:1px;border-color:#0066cc;border-style:outset;">
        <tr bgcolor="e3e9ff">
          <td class="title">
-           <img src="/Images/img/bullet-04.gif">   
-           <font size="2" face="돋움">좋은 하루 되세요
-           </font></td></tr>
+           <img src="/Images/img/bullet-04.gif"> <font size="2" face="돋움">
+           ${pds.subject}</font>
+           </td>
+       </tr>
   <tr>  
     <td class="content">
     <p align="right"><font size="2" face="돋움">  
-			홍길동 / 2007-10-11 / 2번 읽음
-    <p>언제나 즐겁고 행복한 하루가 되었으면 합니다.<br>
-		    항상 노력하는 자 만이 성공할 수 있다.<p>
-    <img src="/Images/img/disk.gif" align="middle" width="22" height="20" border="0">&nbsp;test.zip
-	
-	</font></td></tr>
+	<a class ="list" href="mailto:${pds.email}">${pds.name}</a> /
+	<font size="2" face="돋음"></font> ${pds.regdate} / ${pds.readcnt}번 읽음</font>
+    <p>${pds.contents}<p>
+	<img src="/Images/img/disk.gif" align="middle" width="22" height="20" border="0">&nbsp;${pds.filename}
+	</td>
+	</tr>
   </table>
   <p align="center">
   <font size="2">
-  <img src="/Images/img/edit-1.gif" border="0">&nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="/Images/img/del.gif" border="0">&nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="/Images/img/list-2.gif" border="0"></font></td></tr>  
+  <!-- 수정 하기 -->
+  <a href="/Pds/pds_modify?idx=${pds.idx}&page=${page}"><img src="/Images/img/edit-1.gif" border="0"></a>&nbsp;&nbsp;&nbsp;&nbsp;
+  <!-- 삭제 -->
+  <a href="javascript:pds_delete();">
+  <img src="/Images/img/del.gif" border="0"></a>&nbsp;&nbsp;&nbsp;&nbsp;
+<!-- 목록보기 -->
+	<a href="/Pds/pds_list?page=${page}">
+  <img src="/Images/img/list-2.gif" border="0"></a></font></td></tr>  
 </table>  
 </body>  
 </html>

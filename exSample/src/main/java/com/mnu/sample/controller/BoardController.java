@@ -221,7 +221,7 @@ public class BoardController {
 	//삭제폼
 	@GetMapping("board_delete")
 	public String boardDelete(@ModelAttribute("page") int page, @ModelAttribute("idx") int idx) {
-		return "/Board/board_delete";
+		return "Board/board_delete";
 	}
 
 	//삭제처리
@@ -229,7 +229,7 @@ public class BoardController {
 	public String boardDeletePro(@ModelAttribute("page") int page, BoardDTO boardDTO, Model model) {
 		
 		model.addAttribute("row", boardService.boardDelete(boardDTO));
-		return "/Board/board_delete_pro";
+		return "Board/board_delete_pro";
 	}
 
 

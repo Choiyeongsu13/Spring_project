@@ -60,7 +60,7 @@
       <tr onMouseOver="style.backgroundColor='#D1EEEE'" onMouseOut="style.backgroundColor=''">
         <td align="center" height="25">
         <font face="돋움" size="2" color="#000000">${listcount}</font></td>
-				<td align="left" height="20">&nbsp;<font face="돋움" size="2">${pds.subject}</font></td>
+				<td align="left" height="20">&nbsp;<font face="돋움" size="2"><a class="list" href="/Pds/pds_view?idx=${pds.idx}&page=${page}">${pds.subject}</a></font></td>
         		
         		<td align="center" height="20"><font face="돋움" size="2">${pds.filename}</td>
 				<td align="left" height="20"><font face="돋움" size="2">${pds.name}</font></td>

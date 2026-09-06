@@ -205,7 +205,7 @@ public class PdsController {
 	}
 	
 	@GetMapping("pds_view") // 자료실 보기
-	public String Pdsview(@ModelAttribute("page")int idx, Model model, HttpServletRequest request, HttpServletResponse response){
+	public String Pdsview(@ModelAttribute("page")int page, @RequestParam("idx")int idx, Model model, HttpServletRequest request, HttpServletResponse response){
 		model.addAttribute("pds",pdsService.Pdsview(idx,request,response));
 		return"Pds/pds_view"; //view는 기본
 	}
@@ -220,10 +220,28 @@ public class PdsController {
 
 	//수정 처리
 	@PostMapping("pds_modify")
-	public String pdsModifyPro(@ModelAttribute("page") int page, PdsDTO pdsDTO, Model model) {
-		
+	public String pdsModifyPro(@ModelAttribute("page") int page, PdsDTO pdsDTO,
+			@RequestParam(value = "upfile", required = false) MultipartFile file,
+			@RequestParam(value = "oldfilename", required = false) String oldfilename,
+			HttpServletRequest request, Model model) {
+
+		if (file != null && !file.isEmpty()) {
+			String fileName = file.getOriginalFilename();
+			pdsDTO.setFilename(fileName);
+
+			String path = request.getServletContext().getRealPath("/WEB-INF/views/Pds/upload/");
+			File dest = new File(path, fileName);
+			try {
+				file.transferTo(dest);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			pdsDTO.setFilename(oldfilename);
+		}
+
 		model.addAttribute("row", pdsService.PdsModifyPro(pdsDTO));
-		return "pds/pds_modify_pro";
+		return "Pds/pds_modify_pro";
 	}
 //	@GetMapping("down_load")
 //	public Respons
