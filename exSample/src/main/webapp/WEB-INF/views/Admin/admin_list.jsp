@@ -38,7 +38,7 @@ body {
 					<td><table width="100%" border="0" cellpadding="6" cellspacing="1" bgcolor="DDDDDD">
 							<tr>
 								<td width="30%" align="center" bgcolor="EcECEC"><strong>관리자아이디</strong></td>
-								<td bgcolor="ffffff"><input name="adminid" type="text" value=""  style="width:150; height:18; padding:2; border:1 solid slategray" size="120"></td>
+								<td bgcolor="ffffff"><input name="adid" type="text" value=""  style="width:150; height:18; padding:2; border:1 solid slategray" size="120"></td>
 							</tr>
 							<tr>
 								<td width="30%" align="center" bgcolor="EcECEC"><strong>관리자비밀번호</strong></td>

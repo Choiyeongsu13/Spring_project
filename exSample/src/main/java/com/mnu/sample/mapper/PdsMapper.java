@@ -5,12 +5,16 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.mnu.sample.domain.BoardDTO;
+import com.mnu.sample.domain.NoticeDTO;
 import com.mnu.sample.domain.PageSearchDTO;
 import com.mnu.sample.domain.PdsDTO;
 
 @Mapper
 public interface PdsMapper {
 	//메소드 정의
+	//최근 글 N개 검색
+	public List<PdsDTO> pdsTopList(int num);
+	
 	//1. 전체 글 카운터
 	public int PdsCount();
 

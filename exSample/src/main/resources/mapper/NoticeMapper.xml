@@ -2,6 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mnu.sample.mapper.NoticeMapper">
 
+
+<!-- 최근글 N개 -->
+	<select id ="noticeTopList" resultType="com.mnu.sample.domain.NoticeDTO">
+
+	select * from (select * from tbl_notice order by idx desc)
+	<![CDATA[
+	where rownum <= #{num}
+	]]>
+	<!-- where rownum &lt;= #{num} -->
+	</select>
+
+	<!-- oracle12c 이상 최근글 N개 -->
+	<select id ="noticeTopList2" resultType="com.mnu.sample.domain.NoticeDTO">
+
+	select * from tbl_notice order by idx desc fetch first #{num} rows only
+	</select>
+	
+
+
 <!-- 전체 공지사항 카운트 -->
 	<select id="noticeCount" resultType="int">
 		select count(*) from tbl_notice
@@ -40,9 +59,9 @@
 			</when>
 
 		</choose>
-			order by idx desc 
+			order by idx desc
 		offset #{offset} rows fetch next #{maxlist} rows only
-	
+
 	</select>
 
 <!-- idx에 해당하는 글 목록 modify,view -->
@@ -50,8 +69,12 @@
 
 		select * from tbl_notice where idx = #{idx}
 	</select>
-
-
+<!-- 공지사항 조회수 증가 -->
+<update id="noticeHitUpdate">
+    update tbl_notice
+    set readcnt = readcnt + 1
+    where idx = #{idx}
+</update>
 
 
 

@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ include file="Include/topmenu.jsp" %>
 
  <html>
@@ -18,7 +18,7 @@
      <tr>
        <td width="20%"  height="500" bgcolor="#ecf1ef" valign="top">
 		 <!--  다음에 추가할 부분 -->
-		<jsp:include page="Include/login_form.jsp" /> 
+		<jsp:include page="Include/login_form.jsp" />
 	   </td>
        <td width="80%" valign="top">&nbsp;<br>
        
@@ -33,39 +33,18 @@
  	      <td width="15%" align="center" height="20"><font face="돋움" size="2">작성일</font></td>
  	      <td width="10%" align="center" height="20"><font face="돋움" size="2">조회수</font></td>
  	   </tr>
-	   
+	   <c:forEach var="notice" items="${nList}">
 	   <tr onMouseOver="style.backgroundColor='#D1EEEE'" onMouseOut="style.backgroundColor=''">
 			<td align="left" height="20">&nbsp;
 				<font face="돋움" size="2" color="#000000">
-				<a class="list" href="">제목부분입니다</a></td>
+				<a class="list" href="/Notice/notice_view?page=${page}&idx=${notice.idx}">${notice.subject}</a></td>
 					<td align="center" height="20"><font face="돋움" size="2">
-					<a class="list" >관리자</font></td>
-				<td align="center" height="20"><font face="돋움" size="2">2007-10-22</font></td>
+					<a class="list" >${notice.adid}</font></td>
+				<td align="center" height="20"><font face="돋움" size="2">${notice.regdate}</font></td>
 				<td align="center" height="20"><font face="돋움" size="2">
-				3</font></td>
+				${notice.readcnt }</font></td>
 			</tr>
-		<tr onMouseOver="style.backgroundColor='#D1EEEE'" onMouseOut="style.backgroundColor=''">
-			<td align="left" height="20">&nbsp;
-				<img src="/Images/img/reply2.gif">
-				<font face="돋움" size="2" color="#000000">
-				<a class="list" href="">제목부분입니다</a></td>
-					<td align="center" height="20"><font face="돋움" size="2">
-					<a class="list">관리자</font></td>
-				<td align="center" height="20"><font face="돋움" size="2">2007-10-22</font></td>
-				<td align="center" height="20"><font face="돋움" size="2">
-				3</font></td>
-			</tr>
-		<tr onMouseOver="style.backgroundColor='#D1EEEE'" onMouseOut="style.backgroundColor=''">
-			<td align="left" height="20">&nbsp;
-				<img src="/Images/img/reply2.gif">
-				<font face="돋움" size="2" color="#000000">
-				<a class="list" href="">제목부분입니다</a></td>
-					<td align="center" height="20"><font face="돋움" size="2">
-					<a class="list">관리자</font></td>
-				<td align="center" height="20"><font face="돋움" size="2">2007-10-22</font></td>
-				<td align="center" height="20"><font face="돋움" size="2">
-				3</font></td>
-		</tr>
+</c:forEach>
   		</table>
   	<hr>
       <table border="0" cellspacing="1" width="100%" align="center">
@@ -79,39 +58,18 @@
  	      <td width="15%" align="center" height="20"><font face="돋움" size="2">작성일</font></td>
  	      <td width="10%" align="center" height="20"><font face="돋움" size="2">조회수</font></td>
  	   </tr>
-	   
+	   <c:forEach var="board" items="${bList}">
 	   <tr onMouseOver="style.backgroundColor='#D1EEEE'" onMouseOut="style.backgroundColor=''">
 			<td align="left" height="20">&nbsp;
 				<font face="돋움" size="2" color="#000000">
-				<a class="list" href="">제목부분입니다</a></td>
+				<a class="list" href="/Board/board_view?page=${page}&idx=${board.idx}">${board.subject }</a></td>
 					<td align="center" height="20"><font face="돋움" size="2">
-					<a class="list" >관리자</font></td>
-				<td align="center" height="20"><font face="돋움" size="2">2007-10-22</font></td>
+					<a class="list" >${board.name }</font></td>
+				<td align="center" height="20"><font face="돋움" size="2">${board.regdate }</font></td>
 				<td align="center" height="20"><font face="돋움" size="2">
-				3</font></td>
+				${board.readcnt }</font></td>
 		</tr>
-		<tr onMouseOver="style.backgroundColor='#D1EEEE'" onMouseOut="style.backgroundColor=''">
-			<td align="left" height="20">&nbsp;
-				<img src="/Images/img/reply2.gif">
-				<font face="돋움" size="2" color="#000000">
-				<a class="list" href="">제목부분입니다</a></td>
-					<td align="center" height="20"><font face="돋움" size="2">
-					<a class="list">관리자</font></td>
-				<td align="center" height="20"><font face="돋움" size="2">2007-10-22</font></td>
-				<td align="center" height="20"><font face="돋움" size="2">
-				3</font></td>
-		</tr>
-		<tr onMouseOver="style.backgroundColor='#D1EEEE'" onMouseOut="style.backgroundColor=''">
-			<td align="left" height="20">&nbsp;
-				<img src="/Images/img/reply2.gif">
-				<font face="돋움" size="2" color="#000000">
-				<a class="list" href="">제목부분입니다</a></td>
-					<td align="center" height="20"><font face="돋움" size="2">
-					<a class="list">관리자</font></td>
-				<td align="center" height="20"><font face="돋움" size="2">2007-10-22</font></td>
-				<td align="center" height="20"><font face="돋움" size="2">
-				3</font></td>
-		</tr>
+	</c:forEach>
   		</table>
   	<hr>	
 	<table border="0" cellspacing="1" width="100%" align="center">
@@ -125,39 +83,20 @@
  	      <td width="15%" align="center" height="20"><font face="돋움" size="2">작성일</font></td>
  	      <td width="10%" align="center" height="20"><font face="돋움" size="2">조회수</font></td>
  	   </tr>
-	   
-	   <tr onMouseOver="style.backgroundColor='#D1EEEE'" onMouseOut="style.backgroundColor=''">
-			<td align="left" height="20">&nbsp;
-				<font face="돋움" size="2" color="#000000">
-				<a class="list" href="">제목부분입니다</a></td>
-					<td align="center" height="20"><font face="돋움" size="2">
-					<a class="list" >관리자</font></td>
-				<td align="center" height="20"><font face="돋움" size="2">2007-10-22</font></td>
-				<td align="center" height="20"><font face="돋움" size="2">
-				3</font></td>
-			</tr>
+	 <c:forEach var="pds" items="${pList}">
 		<tr onMouseOver="style.backgroundColor='#D1EEEE'" onMouseOut="style.backgroundColor=''">
 			<td align="left" height="20">&nbsp;
-				<img src="/Images/img/reply2.gif">
+				
 				<font face="돋움" size="2" color="#000000">
-				<a class="list" href="">제목부분입니다</a></td>
+				<a class="list" href="/Pds/pds_view?page=${page}&idx=${pds.idx}">${pds.subject}</a></td>
 					<td align="center" height="20"><font face="돋움" size="2">
-					<a class="list">관리자</font></td>
-				<td align="center" height="20"><font face="돋움" size="2">2007-10-22</font></td>
+					<a class="list">${pds.name }</font></td>
+				<td align="center" height="20"><font face="돋움" size="2">${pds.regdate}</font></td>
 				<td align="center" height="20"><font face="돋움" size="2">
-				3</font></td>
+				${pds.readcnt}</font></td>
 			</tr>
-		<tr onMouseOver="style.backgroundColor='#D1EEEE'" onMouseOut="style.backgroundColor=''">
-			<td align="left" height="20">&nbsp;
-				<img src="/Images/img/reply2.gif">
-				<font face="돋움" size="2" color="#000000">
-				<a class="list" href="">제목부분입니다</a></td>
-					<td align="center" height="20"><font face="돋움" size="2">
-					<a class="list">관리자</font></td>
-				<td align="center" height="20"><font face="돋움" size="2">2007-10-22</font></td>
-				<td align="center" height="20"><font face="돋움" size="2">
-				3</font></td>
-			</tr>
+			
+	</c:forEach>
   		</table>
 			
 

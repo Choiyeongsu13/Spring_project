@@ -17,7 +17,13 @@ public class PdsService {
 	@Autowired
 	private PdsMapper Pdsmapper;
 	
+	
 	//메소드 정의
+	public List<PdsDTO> PdsTopList(int num){
+		
+		return Pdsmapper.pdsTopList(num);
+	}
+	
 	//1. 전체 글 카운터
 	public int PdsCount() {
 		return Pdsmapper.PdsCount();

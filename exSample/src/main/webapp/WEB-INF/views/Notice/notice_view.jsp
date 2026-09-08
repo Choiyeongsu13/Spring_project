@@ -39,7 +39,7 @@
          <tr>
            <td class="content">
              <p align="right"><font size="2" face="돋움">
-              ${notice.adminid} / <font size="2" face="돋움">${notice.regdate } / ${notice.readcnt }번 읽음</font>
+              ${notice.adid} / <font size="2" face="돋움">${notice.regdate } / ${notice.readcnt }번 읽음</font>
              <p>
              ${notice.contents}<p><!--contents의 내용을 <BR>태그로 처리-->
            </td>

@@ -61,7 +61,7 @@ A:hover {font-family:tahoma;font-size:9pt;color:#009900;text-decoration:underlin
                           </tr>
                           <tr> 
                             <td><img src="/Images/img/admin_img10.gif" alt="관리계정" width="64" height="19" align="absmiddle"> 
-                              <input name="adminid" type="text" tabindex="1" style="width:140px;"></td>
+                              <input name="adid" type="text" tabindex="1" style="width:140px;"></td>
                           </tr>
                           <tr> 
                             <td><img src="/Images/img/admin_img11.gif" alt="비밀번호" width="64" height="19" align="absmiddle"> 

@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%@ include file="../Include/topmenu.jsp" %>
 
@@ -53,7 +54,7 @@
              <font face="돋움" size="2" color="#000000">${listcount}</font></td>
 		  <td align="left" height="20">&nbsp;
 			 <font face="돋움" size="2" color="#000000"><a class="list" href="/Notice/notice_view?page=${page}&idx=${notice.idx}">${notice.subject}</a></td>
-		  <td align="center" height="20"><font face="돋움" size="2">	<a class="list" >${notice.adminid}</font></td>
+		  <td align="center" height="20"><font face="돋움" size="2">	<a class="list" >${notice.adid}</font></td>
 		  <td align="center" height="20"><font face="돋움" size="2">${notice.regdate}</font></td>
 		  <td align="center" height="20"><font face="돋움" size="2">${notice.readcnt}</font></td>
 		</tr>

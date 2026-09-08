@@ -19,6 +19,11 @@ public class NoticeService {
 	@Autowired
 	private NoticeMapper noticeMappers;
 	
+	public List<NoticeDTO> noticeTopList(int num){
+		
+		return noticeMappers.noticeTopList(num);
+	}
+	
 	//1. 전체 공지사항  리스트
 		public int noticeCount() {
 			
@@ -37,33 +42,55 @@ public class NoticeService {
 			return noticeMappers.noticeList(pageSearchDTO);
 		}
 		//4. idx에 해당하는 해당하는 글 목록(view, modify) 사용
-		public NoticeDTO noticeSelect(int idx, HttpServletRequest request, HttpServletResponse response) {
-			//쿠키설정
-			boolean bool = false;
-			Cookie info = null;
-			Cookie[] cookies = request.getCookies();
-			if(cookies != null) {
-				for(int i=0; i<cookies.length; i++) {
-					info = cookies[i];
-					if(info.getName().equals("noticeCookie"+idx)) {
-						bool = true;
-						break;
-					}
-				}
-			}
-			String str = ""+System.currentTimeMillis();
-			if(!bool) {
-				//쿠키생성
-				info = new Cookie("noticeCookie"+idx, str);
-				//info.setMaxAge(24*60*60);//1일
-				info.setMaxAge(60*5);//5분
-				response.addCookie(info);
-			}
-			
-			NoticeDTO notice = noticeMappers.noticeSelect(idx);
-			notice.setContents(notice.getContents().replace("\n", "<br>"));
-			
-			return notice;
+		public NoticeDTO noticeSelect(
+		        int idx,
+		        HttpServletRequest request,
+		        HttpServletResponse response) {
+
+		    // 쿠키 조회
+		    boolean bool = false;
+		    Cookie info = null;
+
+		    Cookie[] cookies = request.getCookies();
+
+		    if(cookies != null) {
+
+		        for(int i = 0; i < cookies.length; i++) {
+
+		            info = cookies[i];
+
+		            if(info.getName().equals("noticeCookie" + idx)) {
+		                bool = true;
+		                break;
+		            }
+		        }
+		    }
+
+		    // 쿠키가 없다면 조회수 증가
+		    if(!bool) {
+
+		        // 조회수 +1
+		        noticeMappers.noticeHitUpdate(idx);
+
+		        // 쿠키 생성
+		        String str = "" + System.currentTimeMillis();
+
+		        info = new Cookie("noticeCookie" + idx, str);
+
+		        // 5분
+		        info.setMaxAge(60 * 5);
+
+		        response.addCookie(info);
+		    }
+
+		    // 게시글 조회
+		    NoticeDTO notice = noticeMappers.noticeSelect(idx);
+
+		    notice.setContents(
+		        notice.getContents().replace("\n", "<br>")
+		    );
+
+		    return notice;
 		}
 		
 	

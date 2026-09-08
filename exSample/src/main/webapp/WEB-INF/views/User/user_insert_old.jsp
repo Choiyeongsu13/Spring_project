@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 
-<%@ include file="../Include/topmenu.jsp" %>
+<%@ include file="/Include/topmenu.jsp" %>
 <html>
 <head>
 <title>회원등록</title>
@@ -26,7 +26,7 @@ td   { font-family: 돋움, Verdana; font-size: 9pt; text-decoration: none; colo
   <td width="20%"  bgcolor="#ecf1ef" valign="top" style="padding-left:0;">
 	
 	<!--로그인 영역 삽입-->
-	<%@ include file="Include/login_form.jsp" %>
+	<%@ include file="/Include/login_form.jsp" %>
 	
   </td>
   <td width="80%" valign="top">&nbsp;<img src="/Images/img/title1.gif" ><br>    

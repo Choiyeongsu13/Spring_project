@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mnu.sample.mapper.PdsMapper">
+
+
+
+
+	<!-- oracle12c 이상 최근글 N개 -->
+	<select id ="pdsTopList" resultType="com.mnu.sample.domain.PdsDTO">
+		
+	select * from tbl_pds order by idx desc fetch first #{num} rows only
+	</select>
+	
 	<!-- 1. 전체 글 카운터 get -->
 	<select id = "PdsCount" resultType="int">
 		select count(*) from tbl_Pds
@@ -139,6 +149,10 @@
 	<select id="PdsSearchFile" resultType="string">
 		select filename from tbl_Pds where idx = #{idx}
 	</select>
+	
+
+
+	
 	
 </mapper>
  

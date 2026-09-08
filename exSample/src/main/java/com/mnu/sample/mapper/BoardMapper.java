@@ -5,10 +5,14 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.mnu.sample.domain.BoardDTO;
+import com.mnu.sample.domain.NoticeDTO;
 import com.mnu.sample.domain.PageSearchDTO;
 
 @Mapper
 public interface BoardMapper {
+	//최근 글 N개 검색
+	public List<BoardDTO> boardTopList(int num);
+	
 	//1. 전체 글수 카운트
 	public int boardCount();
 	
