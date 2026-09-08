@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <html>
 <head>
@@ -16,6 +17,18 @@ A:hover {font-family:tahoma;font-size:9pt;color:#009900;text-decoration:underlin
 </style> 
 </head>
 
+<script>
+	function notice_search(){
+		if(!notice.key.value){
+			alert("검색어를 입력하세요");
+			notice.key.focus();
+			return;
+		}
+		notice.submit();
+	}
+
+</script>
+
 <body>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 	<tr><td><jsp:include page="top_menu.jsp" flush="true" /></td></tr>
@@ -29,7 +42,7 @@ A:hover {font-family:tahoma;font-size:9pt;color:#009900;text-decoration:underlin
 			</table><br>
 			<table width="80%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
-                    <td height="20">* 총 등록수 : <font color=red>33</font> 건</td>
+                    <td height="20">* 총 등록수 : <font color=red>${totcount}</font> 건</td>
                 </tr>
                 <tr>
                     <td><table width="100%" border="0" cellpadding="6" cellspacing="1" bgcolor="DDDDDD">
@@ -39,27 +52,32 @@ A:hover {font-family:tahoma;font-size:9pt;color:#009900;text-decoration:underlin
                         <td width="20%" align="center"><strong>접수일</strong></td>
                         <td width="10%" align="center"><strong>조회수</strong></td>
                       </tr>
+                    <c:forEach var="notice" items="${pList}">
                       <tr>
-                        <td align="center" bgcolor="#FFFFFF">1</td>
-                        <td bgcolor="#FFFFFF"><a href="" class="unnamed1">안녕하세요</a></td>
-                        <td align="center" bgcolor="#FFFFFF">2007-11-11</td>
-						<td align="center" bgcolor="#FFFFFF">3</td>
+                        <td align="center" bgcolor="#FFFFFF">${listcount}</td>
+                        <td bgcolor="#FFFFFF"><a href="/Admin/Notice/notice_view?page=${page}&idx=${notice.idx}" class="unnamed1">${notice.subject}</a></td>
+                        <td align="center" bgcolor="#FFFFFF">${notice.regdate}</td>
+						<td align="center" bgcolor="#FFFFFF">${notice.readcnt}</td>
                       </tr>
+                     	<c:set var = "listcount" value="${listcount-1 }"></c:set>
+                     </c:forEach>
 	                     <tr>
-                        <td height="35" colspan="10" align="center" bgcolor="#FFFFFF">[1][2][3]</td>
+                        <td height="35" colspan="10" align="center" bgcolor="#FFFFFF">${pageSkip}</td>
                       </tr>
-					<form action="notice.jsp" method="post" name="b_search">
+					<form action="/Admin/Notice/notice_list" method="post" name="notice">
+                      <input type="hidden" name="page" value="1">
                       <tr>
                         <td colspan="10" align="center" bgcolor="#FFFFFF"><table width="610" border="0" cellspacing="0" cellpadding="0">
                             <tr>
                               <td width=80% height="30" colspan="2" align="right">
 								<select name="search" class="textfield">
-									<option >제목</option>
+									<option value="subject" ${search=='subject' ? "selected" : "" }>제목</option>
+									<option value="contents" ${search=='contents' ? "selected" : "" }>내용</option>
 								</select>
-								<input name="key" type="text" class="textfield" size="30" value=""></td>
-                              <td width=20% align="right"><a href=""><b>[검색]</b></a>  &nbsp;<a href=""><b>[글쓰기]</b></a></td>
+								<input name="key" type="text" class="textfield" size="30" value="${key}"></td>
+                              <td width=20% align="right"><a href="javascript:notice_search()"><b>[검색]</b></a>  &nbsp;<a href="/Admin/Notice/notice_write?page=${page}"><b>[글쓰기]</b></a></td>
                             </tr>
-									
+
                         </table></td>
                       </tr>
                     </table>

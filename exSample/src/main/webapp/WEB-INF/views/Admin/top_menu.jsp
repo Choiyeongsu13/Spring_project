@@ -20,22 +20,22 @@ A:hover {font-family:tahoma;font-size:9pt;color:#000000;text-decoration:underlin
     <TR> 
 			<TD width="20"></TD>
 			<td width="100"> 
-        <p><a href="notice_list.jsp">[공지사항 관리]</a></p>
+        <p><a href="/Admin/Notice/notice_list?page=1">[공지사항 관리]</a></p>
       </td>
-			<TD width="100"> 
-        <P><a href="board_list.jsp">[게시판 관리]</a></P>
+			<TD width="100">
+        <P><a href="/Admin/Board/board_list?page=1">[게시판 관리]</a></P>
+      </TD>
+			<TD width="100">
+        <P><a href="/Admin/User/user_list?page=1">[회원관리]</a></P>
+      </TD>
+			<TD width="100">
+        <P><a href="/Admin/Pds/pds_list?page=1">[자료실 관리]</a></P>
       </TD>
 			<TD width="100"> 
-        <P><a href="member_list.jsp">[회원관리]</a></P>
+        <P><a href="/Admin/_list?page=1">[방명록 관리]</a></P>
       </TD>
 			<TD width="100"> 
-        <P><a href="pds_list.jsp">[자료실 관리]</a></P>
-      </TD>
-			<TD width="100"> 
-        <P><a href="guest_list.jsp">[방명록 관리]</a></P>
-      </TD>
-			<TD width="100"> 
-        	<P><a href="admin.jsp">[관리자 관리]</a></P>
+        	<P><a href="/Admin/admin_list">[관리자 관리]</a></P>
       </TD>
       <TD width="100"> 
         <P><a href="logout.jsp">로그아웃</a></P>

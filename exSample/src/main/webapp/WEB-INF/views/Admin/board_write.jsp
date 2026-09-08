@@ -18,6 +18,14 @@ body {
 </style>
 </head>
 
+<script >
+	function board_send(){
+		alert("글을 등록합니다")
+		board.submit();
+	}
+
+</script>
+
 <body>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 	<tr><td><jsp:include page="top_menu.jsp" flush="true" /></td></tr>

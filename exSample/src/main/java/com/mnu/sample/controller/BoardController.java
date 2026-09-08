@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,7 +44,7 @@ public class BoardController {
 */	
 	//게시판 전체 리스트(검색 X, 페이징처리 O)
 	@GetMapping("board_list_page")
-	public String boardListPage(@ModelAttribute("page") int page, PageSearchDTO pageSearchDTO, Model model) {
+	public String boardListPage(@RequestParam(value="page", defaultValue="1") int page, PageSearchDTO pageSearchDTO, Model model) {
 		log.info("Board Call : board_list");
 		
 		int nowpage = page ; //넘어온 페이지 저장
@@ -93,7 +92,7 @@ public class BoardController {
 */	
 	//게시판 전체 리스트(검색 X, 페이징처리 O)
 	@PostMapping("board_list_page")
-	public String boardListSearchPage(@ModelAttribute("page") int page, PageSearchDTO pageSearchDTO, Model model) {
+	public String boardListSearchPage(@RequestParam(value="page", defaultValue="1") int page, PageSearchDTO pageSearchDTO, Model model) {
 		log.info("Board Call : board_list");
 		
 		int nowpage = page ; //넘어온 페이지 저장
@@ -129,7 +128,7 @@ public class BoardController {
 
 	//Get, Post 겸용 (검색 O, 페이징 O)
 	@RequestMapping(value="board_list", method = {RequestMethod.GET, RequestMethod.POST})
-	public String boardList(@ModelAttribute("page") int page, PageSearchDTO pageSearchDTO, Model model) {
+	public String boardList(@RequestParam(value="page", defaultValue="1") int page, PageSearchDTO pageSearchDTO, Model model) {
 
 		log.info("Board Call : board_list");
 		
@@ -181,13 +180,13 @@ public class BoardController {
 	
 	//글 등록 폼
 	@GetMapping("board_write")
-	public String boardWrite(@ModelAttribute("page") int page) {
+	public String boardWrite(@RequestParam(value="page", defaultValue="1") int page) {
 		return "Board/board_write";
 	}
 	
 	//글 등록처리
 	@PostMapping("board_write")
-	public String boardWritePro(@ModelAttribute("page") int page, BoardDTO boardDTO) {
+	public String boardWritePro(@RequestParam(value="page", defaultValue="1") int page, BoardDTO boardDTO) {
 		int row = boardService.boardWrite(boardDTO);
 		return "redirect:board_list?page=" + page;
 		//return "redirect:/"; //index로 이동시
@@ -195,7 +194,7 @@ public class BoardController {
 	
 	//상세보기(view)
 	@GetMapping("board_view")
-	public String boardView(@ModelAttribute("page") int page, 
+	public String boardView(@RequestParam(value="page", defaultValue="1") int page, 
 										@RequestParam("idx") int idx, Model model, HttpServletRequest request, HttpServletResponse response) {
 		
 		model.addAttribute("board", boardService.boardView(idx, request, response));
@@ -204,7 +203,7 @@ public class BoardController {
 	
 	//수정
 	@GetMapping("board_modify")
-	public String boardModify(@ModelAttribute("page") int page, @RequestParam("idx") int idx , Model model) {
+	public String boardModify(@RequestParam(value="page", defaultValue="1") int page, @RequestParam("idx") int idx , Model model) {
 		
 		model.addAttribute("board", boardService.boardModify(idx));
 		return "Board/board_modify";
@@ -212,7 +211,7 @@ public class BoardController {
 
 	//수정 처리
 	@PostMapping("board_modify")
-	public String boardModifyPro(@ModelAttribute("page") int page, BoardDTO boardDTO, Model model) {
+	public String boardModifyPro(@RequestParam(value="page", defaultValue="1") int page, BoardDTO boardDTO, Model model) {
 		
 		model.addAttribute("row", boardService.boardModifyPro(boardDTO));
 		return "Board/board_modify_pro";
@@ -220,13 +219,13 @@ public class BoardController {
 
 	//삭제폼
 	@GetMapping("board_delete")
-	public String boardDelete(@ModelAttribute("page") int page, @ModelAttribute("idx") int idx) {
+	public String boardDelete(@RequestParam(value="page", defaultValue="1") int page, @RequestParam("idx") int idx) {
 		return "Board/board_delete";
 	}
 
 	//삭제처리
 	@PostMapping("board_delete")
-	public String boardDeletePro(@ModelAttribute("page") int page, BoardDTO boardDTO, Model model) {
+	public String boardDeletePro(@RequestParam(value="page", defaultValue="1") int page, BoardDTO boardDTO, Model model) {
 		
 		model.addAttribute("row", boardService.boardDelete(boardDTO));
 		return "Board/board_delete_pro";

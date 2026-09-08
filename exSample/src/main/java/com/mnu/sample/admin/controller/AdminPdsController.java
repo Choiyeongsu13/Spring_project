@@ -1,20 +1,11 @@
-package com.mnu.sample.controller;
+package com.mnu.sample.admin.controller;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.util.UriUtils;
 
 import com.mnu.sample.domain.PageSearchDTO;
 import com.mnu.sample.domain.PdsDTO;
@@ -36,54 +25,42 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
-@RequestMapping("Pds")
-public class PdsController {
-	
+@RequestMapping("Admin/Pds")
+public class AdminPdsController {
+
 	private static final Logger log=
-			LoggerFactory.getLogger(NoticeController.class);
+			LoggerFactory.getLogger(AdminPdsController.class);
 
 	@Autowired
 	private PdsService pdsService; //주입
-	
-/*
-	//자료실 리스트(검색 X, 페이징처리 X)
-	@GetMapping("pds_list")
-	public String PdsList() {
 
-		log.info("pds call : list");
-		return"Pds/pds_list"; //view는 기본
-	}
-*/
 	//등록폼
-	@GetMapping("pds_write") 
+	@GetMapping("pds_write")
 	public String PdsWrite() {
 
 		log.info("pds call : write");
-		return"Pds/pds_write";
+		return"Admin/pds_write";
 	}
 	//등록처리
-	@PostMapping("pds_writePro") 
+	@PostMapping("pds_writePro")
 	public String PdsWritePro(MultipartHttpServletRequest request) { //파일첨부 방식
-		log.info("pds call : pds_write_pro");
+		log.info("Admin pds call : pds_write_pro");
 		PdsDTO pdsDTO = new PdsDTO();
 		pdsDTO.setName(request.getParameter("name"));
 		pdsDTO.setEmail(request.getParameter("email"));
 		pdsDTO.setSubject(request.getParameter("subject"));
 		pdsDTO.setContents(request.getParameter("contents"));
 		pdsDTO.setPass(request.getParameter("pass"));
-				
+
 		MultipartFile mf = request.getFile("filename"); //첨부파일 이름받기
 
 		if (mf != null && !mf.isEmpty()) {
-			//파일이름 추출
 			String fileName = mf.getOriginalFilename();
 			pdsDTO.setFilename(fileName);
 
-			//저장경로 설정
 			String path = request.getServletContext().getRealPath("/WEB-INF/views/Pds/upload/");
 
-			//실제 파일 저장
-			File file = new File(path, fileName); //파일 객체 생성
+			File file = new File(path, fileName);
 			try {
 				mf.transferTo(file);
 			}catch(Exception e) {
@@ -94,105 +71,36 @@ public class PdsController {
 		}
 
 		pdsService.PdsWrite(pdsDTO);
-		return"redirect:/Pds/pds_list?page=1"; //컨트롤러
-	}
-	
-	//게시판 전체 리스트 (검색 x, 페이징처리O)
-	@GetMapping("pds_list_page")
-	public String pdsListPage(@RequestParam(value="page", defaultValue="1") int page , PageSearchDTO pagesearchDTO,Model model) {
-		
-		int nowpage= page;
-		int maxlist = 10;
-		int totpage = 1;
-		
-		int totcount = pdsService.PdsCount();
-		
-		if(totcount % maxlist ==0)
-			totpage = totcount /maxlist;
-		else
-			totpage = totcount / maxlist +1;
-		
-		int offset = (nowpage -1) * maxlist;
-		
-		int listcount = totcount - ((nowpage-1) * maxlist);
-		
-		pagesearchDTO.setOffset(offset);
-		pagesearchDTO.setMaxlist(maxlist);
-		
-		String pageSkip = PageIndex.pageList(nowpage, totpage, "pds_list", maxlist);
-		
-		model.addAttribute("totcount", totcount);
-		model.addAttribute("totpage", totpage);
-		model.addAttribute("listcount", listcount);
-		model.addAttribute("pList", pdsService.PdsListPage(pagesearchDTO));
-		model.addAttribute("pageSkip", pageSkip);
-		
-		return "Pds/pds_list";
-	
-	}
-	
-	//게시판 전체 리스트(검색 X, 페이징처리 O)
-	@PostMapping("pds_list_page")
-	public String pdsListSearchPage(@RequestParam(value="page", defaultValue="1") int page, PageSearchDTO pageSearchDTO, Model model) {
-		log.info("pds Call : pds_list");
-		
-		int nowpage = page ; //넘어온 페이지 저장
-		int maxlist = 10; //페이지당 글수
-		int totpage = 1; //총 페이지수
-		
-		int totcount = pdsService.PdsCountSearch(pageSearchDTO.getSearch(), pageSearchDTO.getKey());//총 글수
-		// 총 페이지수 계산
-		if(totcount % maxlist ==0)
-			totpage = totcount / maxlist;
-		else
-			totpage = totcount / maxlist + 1;
-				
-		int offset = (nowpage - 1) * maxlist;
-		
-		//게시글 일련번호 출력용
-		int listcount = totcount - ((nowpage-1) * maxlist);
-		
-		pageSearchDTO.setOffset(offset);
-		pageSearchDTO.setMaxlist(maxlist);
-		
-		String pageSkip = PageIndex.pageListHan(nowpage, totpage, "pds_list_page", maxlist, pageSearchDTO.getSearch(), pageSearchDTO.getKey());
-		
-		
-		model.addAttribute("totcount", totcount);
-		model.addAttribute("totpage", totpage);
-		model.addAttribute("listcount", listcount);
-		model.addAttribute("pList", pdsService.PdsListSearchPage(pageSearchDTO));
-		model.addAttribute("pageSkip", pageSkip);
-		
-		return "Pds/pds_list";
+		return"redirect:/Admin/Pds/pds_list?page=1"; //컨트롤러
 	}
 
-	
+
+
 	//게시판 전체 리스트 Get,Post 겸용
 	@RequestMapping(value="pds_list", method = {RequestMethod.GET, RequestMethod.POST})
 	public String pdsList(@RequestParam(value="page", defaultValue="1") int page, PageSearchDTO pagesearchDTO, Model model) {
 		int nowpage=page;
 		int maxlist = 10;
 		int totpage= 1;
-		
+
 		int totcount = 0;
 		if(pagesearchDTO.getKey() != null)
 			totcount = pdsService.PdsCountSearch(pagesearchDTO.getSearch(),pagesearchDTO.getKey());
 		else
 			totcount = pdsService.PdsCount();
-		
+
 		if(totcount % maxlist ==0)
 			totpage = totcount / maxlist;
 		else
 			totpage = totcount / maxlist +1;
-		
+
 		int offset = (nowpage -1) * maxlist;
-		
+
 		int listcount = totcount - ((nowpage-1) * maxlist);
-		
+
 		pagesearchDTO.setOffset(offset);
 		pagesearchDTO.setMaxlist(maxlist);
-		
+
 		List<PdsDTO> pList = null;
 		String pageSkip = null;
 		if(pagesearchDTO.getKey() != null) {
@@ -203,28 +111,28 @@ public class PdsController {
 			pList = pdsService.PdsListPage(pagesearchDTO);
 			pageSkip = PageIndex.pageList(nowpage, totpage, "pds_list", maxlist);
 		}
-			
+
 		model.addAttribute("totcount",totcount);
 		model.addAttribute("totpage",totpage);
 		model.addAttribute("listcount",listcount);
 		model.addAttribute("pList",pList);
 		model.addAttribute("pageSkip",pageSkip);
-		
-		return "Pds/pds_list";
+
+		return "Admin/pds_list";
 	}
-	
+
 	@GetMapping("pds_view") // 자료실 보기
 	public String Pdsview(@RequestParam(value="page", defaultValue="1") int page, @RequestParam("idx")int idx, Model model, HttpServletRequest request, HttpServletResponse response){
 		model.addAttribute("pds",pdsService.Pdsview(idx,request,response));
-		return"Pds/pds_view"; //view는 기본
+		return"Admin/pds_view"; //view는 기본
 	}
-	
+
 	//수정
 	@GetMapping("pds_modify")
 	public String pdsModify(@RequestParam(value="page", defaultValue="1") int page, @RequestParam("idx") int idx , Model model) {
-		
+
 		model.addAttribute("pds", pdsService.PdsModify(idx));
-		return "Pds/pds_modify";
+		return "Admin/pds_modify";
 	}
 
 	//수정 처리
@@ -240,9 +148,7 @@ public class PdsController {
 		String oldfilename = request.getParameter("oldfilename");
 
 		MultipartFile mf = request.getFile("upfile");
-		
-		//업로드 경로설정
-		
+
 		String path = request.getServletContext().getRealPath("/WEB-INF/views/Pds/upload/");
 		String filename = (mf != null) ? mf.getOriginalFilename() : "";
 		if(mf == null || filename.equals("")) {
@@ -253,7 +159,7 @@ public class PdsController {
 			File oldFile=new File(path+oldfilename);
 			try {
 				if(oldFile.exists()) {
-					oldFile.delete();// 파일삭제
+					oldFile.delete();
 				}
 				mf.transferTo(newFile);
 			}catch(Exception e) {
@@ -262,67 +168,28 @@ public class PdsController {
 			dto.setFilename(filename);
 		}
 		pdsService.PdsModifyPro(dto);
-		return "redirect:/Pds/pds_list?page="+page;// 매핑정보
-		
-		
+		return "redirect:/Admin/Pds/pds_list?page="+page;
 	}
-	// 기존 업로드와 동일한 경로를 얻기 위해 request 주입
-		// 파일다운로드
-		@GetMapping("down_load")
-		public ResponseEntity<Resource> downloadFile( 
-				  @RequestParam("filename") String filename,
-	                                              HttpServletRequest request) {        
-	        try {
-	            // 1. 업로드 때와 동일한 서블릿 컨텍스트 상의 실제 물리 경로 획득
-	            String uploadPath = request.getServletContext().getRealPath("/WEB-INF/views/Pds/upload/");
-	            
-	            // 2. 보안을 위해 상위 디렉토리 접근 차단(.normalize()) 및 경로 병합
-	            Path path = Paths.get(uploadPath).resolve(filename).normalize();
-	            Resource resource = new UrlResource(path.toUri());
-
-	            // 3. 파일 존재 및 읽기 가능 여부 체크
-	            if (!resource.exists() || !resource.isReadable()) {
-	                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "파일을 찾을 수 없습니다: " + filename);
-	            }
-
-	            // 4. 한글 파일명 깨짐 방지 인코딩
-	            String encodedFilename = UriUtils.encode(filename, StandardCharsets.UTF_8);
-	            
-	            // 5. 다운로드 창을 띄우기 위한 Content-Disposition 설정
-	            String contentDisposition = "attachment; filename=\"" + encodedFilename + "\"";
-
-	            return ResponseEntity.ok()
-	                    .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
-	                    .body(resource);
-
-	        } catch (MalformedURLException e) {
-	            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 경로 오류가 발생했습니다.");
-	        }
-	    }	
-		
 
 	@GetMapping("pds_delete") //삭제폼
 	public String PdsDelete(@RequestParam(value="page", defaultValue="1") int page, @RequestParam("idx") int idx) {
-		return"Pds/pds_delete"; //view는 기본
+		return"Admin/pds_delete"; //view는 기본
 	}
 	@PostMapping("pds_delete")
 	public String pdsDeletePro(@RequestParam(value="page", defaultValue="1") int page, PdsDTO dto, Model model, HttpServletRequest request) {
 		log.info("Call  :  pds_delete (삭제 처리)" );
 		String filename = pdsService.PdsSearchFile(dto.getIdx());//파일검색
 		int row=pdsService.PdsDeletePro(dto);
-		
+
 		model.addAttribute("row", row);
-		//첨부파일삭제
 		if(row==1) {
 			if(filename != null) {
 				File file = new File(request.getServletContext().getRealPath("/WEB-INF/views/Pds/upload/") + filename);
 				file.delete();
 			}
-		}	
-		
-		return "/Pds/pds_delete_pro";
+		}
+
+		return "Admin/pds_delete_pro";
 	}
-	
-	
 
 }

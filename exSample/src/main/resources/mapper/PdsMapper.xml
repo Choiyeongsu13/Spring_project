@@ -135,7 +135,10 @@
 		<delete id="PdsDeletePro">
 			delete from tbl_Pds where idx = #{idx} and pass = #{pass}
 		</delete>
-	
+	<!-- 첨부파일 검색 -->
+	<select id="PdsSearchFile" resultType="string">
+		select filename from tbl_Pds where idx = #{idx}
+	</select>
 	
 </mapper>
  

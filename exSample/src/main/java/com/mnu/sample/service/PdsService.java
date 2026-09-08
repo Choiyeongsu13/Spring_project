@@ -5,12 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mnu.sample.domain.PdsDTO;
-import com.mnu.sample.domain.BoardDTO;
 import com.mnu.sample.domain.PageSearchDTO;
+import com.mnu.sample.domain.PdsDTO;
 import com.mnu.sample.mapper.PdsMapper;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -56,6 +54,11 @@ public class PdsService {
 	public int PdsWrite(PdsDTO PdsDTO) {
 		return Pdsmapper.PdsWrite(PdsDTO);
 	}
+	
+	//특정글 검색
+	public void pdsHits(int idx) {
+		Pdsmapper.PdsHits(idx);
+	}
 
 	//6. 특정글 검색 (view, modify)
 	public PdsDTO Pdsview(int idx, HttpServletRequest request, HttpServletResponse response) {
@@ -77,6 +80,11 @@ public class PdsService {
 	//8. 삭제처리
 	public int PdsDeletePro(PdsDTO pdsDTO) {
 		return Pdsmapper.PdsDeletePro(pdsDTO);
+	}
+	
+	//.9 삭제처리시 파일이 있는지 검색
+	public String PdsSearchFile(int idx) {
+		return Pdsmapper.PdsSearchFile(idx);
 	}
 
 }

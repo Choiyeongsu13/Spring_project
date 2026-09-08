@@ -1,0 +1,24 @@
+CREATE TABLE tbl_notice (
+  idx number NOT NULL ,				--  고유번호, 자동증가
+  adid varchar2(20) references tbl_admin ,		--  관리자 아이디
+  subject varchar2(255) NOT NULL ,			--  제목
+  contents varchar2(2000) NOT NULL,			--  내용
+  regdate date default sysdate,			--  등록일자
+  readcnt number default 0,				--  조회수
+  PRIMARY KEY  (idx)
+);
+create sequence tbl_notice_seq_idx;
+
+
+CREATE TABLE tbl_admin (
+  adname varchar2(20) NOT NULL ,			--  이름
+  adid varchar2(20) NOT NULL ,			--  아이디
+  adpass varchar2(100) NOT NULL ,			--  비밀번호
+  addept varchar2(20)  NULL ,				--  소속부서
+  adtel varchar2(20)  NULL ,				--  연락처
+  adrole varchar2(10) NOT NULL,			--  권한(user,admin,manager)
+  adregdate date default sysdate,			--  등록일자
+  adupdate date,					--  최근 접록일
+  PRIMARY KEY  (adid)
+);
+

@@ -32,17 +32,17 @@ A:hover {font-family:tahoma;font-size:9pt;color:#009900;text-decoration:underlin
 					<td><table width="100%" border="0" cellpadding="6" cellspacing="1" bgcolor="DDDDDD">
 							<tr>
 								<td align="center" bgcolor="EcECEC"><strong>제목</strong></td>
-								<td colspan=3 bgcolor="ffffff">안녕하세요</td>
+								<td colspan=3 bgcolor="ffffff">${notice.subject }</td>
 							</tr>
 							<tr>
 								<td width="20%" align="center" bgcolor="EcECEC"><strong>등록일</strong></td>
-								<td width="40%" bgcolor="ffffff">2007-11-11</td>
+								<td width="40%" bgcolor="ffffff">${notice.regdate}</td>
 								<td width="20%" align="center" bgcolor="EcECEC"><strong>조회수</strong></td>
-								<td align="center" bgcolor="ffffff">3</td>
+								<td align="center" bgcolor="ffffff">${notice.readcnt }</td>
 							</tr>
 							<tr bgcolor="EcECEC">
 								<td align="center" bgcolor="EcECEC"><strong>내용</strong></td>
-								<td colspan=3 bgcolor="ffffff">하하하하핳</td>
+								<td colspan=3 bgcolor="ffffff">${notice.contents}</td>
 							</tr>
 						</table>
 					</td>
@@ -51,7 +51,7 @@ A:hover {font-family:tahoma;font-size:9pt;color:#009900;text-decoration:underlin
 			</table><br>
 			<table width="60%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
-					<td align=center><a href=""><b>[수정]</b></a>&nbsp; <a href=""><b>[삭제]</b></a>&nbsp; <a href=""><b>[목록]</b></a></td>
+					<td align=center><a href="/Admin/Notice/notice_modify?page=${page}&idx=${notice.idx}"><b>[수정]</b></a>&nbsp; <a href="/Admin/Notice/notice_delete?page=${page}&idx=${notice.idx}" onclick="return confirm('삭제하시겠습니까?');"><b>[삭제]</b></a>&nbsp; <a href="/Admin/Notice/notice_list?page=${page}"><b>[목록]</b></a></td>
 				</tr>
 			</table>
 		</td>

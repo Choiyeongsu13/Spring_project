@@ -42,6 +42,8 @@ public interface PdsMapper {
 
 	//8. 삭제처리
 	public int PdsDeletePro(PdsDTO pdsDTO);
+	//9 . 삭제처리 첨부파일 검색
+	public String PdsSearchFile(int idx);
 
 
 }

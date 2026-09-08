@@ -8,6 +8,17 @@
 <style type="text/css">
   a.list {text-decoration:none;color:black;font-size:10pt;}
 </style>
+<script>
+	function notice_search(){
+		if(!notice.key.value){
+			notice.key.focus();
+			return;
+		}
+		notice.submit();
+	}
+
+
+</script>
 
 </head>
 <body bgcolor="#FFFFFF" topmargin="0" leftmargin="0">
@@ -28,7 +39,7 @@
         <img src="/Images/img/bullet-01.gif"> <b>공 지 사 항</b></font></td></tr>
       <tr>
         <td colspan="5" align="right" valign="middle" height="20">
-		<font size="2" face="고딕">전체 : <b>15</b>건 - 1/ 2 Pages</font></td></tr>
+		<font size="2" face="고딕">전체 : <b>${totcount}</b>건 - ${page}/ ${totpage } Pages</font></td></tr>
  	   <tr bgcolor="e3e9ff">
  	      <td width="10%" align="center" height="20"><font face="돋움" size="2">번 호</font></td>
  	      <td width="50%" align="center" height="20"><font face="돋움" size="2">제 목</font></td>
@@ -36,22 +47,24 @@
  	      <td width="15%" align="center" height="20"><font face="돋움" size="2">작성일</font></td>
  	      <td width="10%" align="center" height="20"><font face="돋움" size="2">조회수</font></td>
  	   </tr>
-
+	<c:forEach var="notice" items="${pList}">
 	   <tr onMouseOver="style.backgroundColor='#D1EEEE'" onMouseOut="style.backgroundColor=''">
           <td align="center" height="25">
-             <font face="돋움" size="2" color="#000000">5</font></td>
+             <font face="돋움" size="2" color="#000000">${listcount}</font></td>
 		  <td align="left" height="20">&nbsp;
-			 <font face="돋움" size="2" color="#000000"><a class="list" href="">제목부분입니다</a></td>
-		  <td align="center" height="20"><font face="돋움" size="2">	<a class="list" >관리자</font></td>
-		  <td align="center" height="20"><font face="돋움" size="2">2007-10-22</font></td>
-		  <td align="center" height="20"><font face="돋움" size="2">3</font></td>
+			 <font face="돋움" size="2" color="#000000"><a class="list" href="/Notice/notice_view?page=${page}&idx=${notice.idx}">${notice.subject}</a></td>
+		  <td align="center" height="20"><font face="돋움" size="2">	<a class="list" >${notice.adminid}</font></td>
+		  <td align="center" height="20"><font face="돋움" size="2">${notice.regdate}</font></td>
+		  <td align="center" height="20"><font face="돋움" size="2">${notice.readcnt}</font></td>
 		</tr>
+		<c:set var="listcount" value="${listcount-1}"></c:set>
+	</c:forEach>	
 	</table>
 	 <div align="center">
         <table width="700" border="0" cellspacing="0" cellpadding="5">
           <tr>&nbsp;</tr><tr>
              <td colspan="5">        
-                <div align="center">[1][2][3]</div>
+                <div align="center">${pageSkip}</div>
 			  </td>
 			 </tr>
 		</table>
@@ -66,18 +79,15 @@
 						<tr>
 							<td>
 								<select name="search">
-									<option value="">글제목</option>
-									<option value="">글내용</option>
+									<option value="subject" ${search =='subject' ? "selected": ""}>글제목</option>
+									<option value="contents" ${search == 'contents' ? "selected" : "" }>글내용</option>
 								</select>
 							</td>
-							<td> <input type="text" size=20 name=""></td>
-							<td> <a href="#"><img src="/Images/img/search2.gif" border="0"></a></td>
+							<td> <input type="text" size=20 name="key" value="${key}"></td>
+							<td> <a href="javascript:notcie_search()"><img src="/Images/img/search2.gif" border="0"></a></td>
 						</tr>
 					</form>
 				</table>
-			</td>
-			<td width="25%" align="right">
-			<a href="#"><img src="/Images/img/write.gif" border="0"></a>
 			</td>
 		</tr>
 	</table>

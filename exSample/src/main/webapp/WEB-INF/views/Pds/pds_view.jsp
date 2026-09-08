@@ -14,8 +14,8 @@
  </head>
  <script>
  	function pds_delete(){
- 		var url="/Pds/pds_delete?idx=${pds.idx}&page=${page}";
- 		window.open(url,"pds_delete","width=350,height=250");
+ 		var url="/Pds/pds_delete?idx="+${pds.idx}+"&page="+${page};
+ 		window.open(url,"자료실 삭제 ","width=300,height=200");
  	}
  	</script>
 
@@ -47,12 +47,14 @@
            </td>
        </tr>
   <tr>  
-    <td class="content">
-    <p align="right"><font size="2" face="돋움">  
-	<a class ="list" href="mailto:${pds.email}">${pds.name}</a> /
-	<font size="2" face="돋음"></font> ${pds.regdate} / ${pds.readcnt}번 읽음</font>
-    <p>${pds.contents}<p>
-	<img src="/Images/img/disk.gif" align="middle" width="22" height="20" border="0">&nbsp;${pds.filename}
+	<td class="content">
+				<p align="right"><font size="2" face="돋움"> ${pds.name} / ${pds.regdate} / ${pds.readcnt}번 읽음
+				<p>${pds.contents}</p>
+    <c:if test="${!empty pds.filename}">
+	<img src="/Images/img/disk.gif" align="middle" width="22" height="20" border="0">
+	&nbsp;<a class="list" href="/Pds/down_load?filename=${pds.filename}">${pds.filename}</a>
+	</c:if>
+	</font>
 	</td>
 	</tr>
   </table>

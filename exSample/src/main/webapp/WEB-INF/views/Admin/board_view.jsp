@@ -13,7 +13,15 @@ A:visited {font-family:tahoma;font-size:9pt;color:#666666;text-decoration:none;}
 A:active {font-family:tahoma;font-size:9pt;color:#666666;text-decoration:none;} 
 A:hover {font-family:tahoma;font-size:9pt;color:#009900;text-decoration:underline;} 
 --> 
-</style> 
+</style>
+<script>
+	function board_delete(){
+		var url="/Admin/board_delete?idx=${board.idx}&page=${page}";
+		window.open(url,"board_delete","width=350, height=250");
+	}
+
+
+</script> 
 
 </head>
 
@@ -33,15 +41,15 @@ A:hover {font-family:tahoma;font-size:9pt;color:#009900;text-decoration:underlin
 					<td><table width="100%" border="0" cellpadding="6" cellspacing="1" bgcolor="DDDDDD">
 							<tr>
 								<td width="18%" align="center" bgcolor="EcECEC"><strong>제목</strong></td>
-								<td width="48%"bgcolor="ffffff">안녕하세요</td>
+								<td width="48%"bgcolor="ffffff">${board.subject }</td>
 								<td width="18%" align="center" bgcolor="EcECEC"><strong>작성자</strong></td>
-								<td align="center" bgcolor="ffffff">홍길동</td>
+								<td align="center" bgcolor="ffffff">${board.name }</td>
 							</tr>
 							<tr>
 								<td align="center" bgcolor="EcECEC"><strong>등록일</strong></td>
-								<td bgcolor="ffffff">200-10-11</td>
+								<td bgcolor="ffffff">${board.regdate }</td>
 								<td align="center" bgcolor="EcECEC"><strong>조회수</strong></td>
-								<td align="center" bgcolor="ffffff">3</td>
+								<td align="center" bgcolor="ffffff">${board.readcnt }</td>
 							</tr>
 							<tr bgcolor="EcECEC">
 								<td align="center" bgcolor="EcECEC"><strong>내용</strong></td>
