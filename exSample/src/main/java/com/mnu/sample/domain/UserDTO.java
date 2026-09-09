@@ -15,5 +15,6 @@ public class UserDTO {
 	
 	private String first_time;
 	private String last_time;
+	private String gubun; //핸드폰인증1 , 이메일인증 2
 
 }

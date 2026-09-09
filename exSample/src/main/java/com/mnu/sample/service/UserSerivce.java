@@ -84,6 +84,20 @@ public class UserSerivce {
 		return userMapper.userWrite(userDTO);
 	}
 	
+	//3.로그인
+	public UserDTO userLogin(UserDTO userDTO) {
+		//비밀번호 암호화
+		userDTO.setPasswd(UserSHA256.getSHA256(userDTO.getPasswd()));
+		
+		
+		return userMapper.userLogin(userDTO);
+	}
+	
+	//4. 로그인 한 날짜업데이트
+	public void userLastTimeUpdate(String userid) {
+		userMapper.userLastTimeUpdate(userid);
+	}
+	
 	
 		
 }

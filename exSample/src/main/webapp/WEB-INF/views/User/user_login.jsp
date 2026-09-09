@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ include file="../Include/topmenu.jsp" %>
 <HTML>
 <HEAD>
@@ -13,6 +13,25 @@ td   { font-family: 돋움, Verdana; font-size: 9pt; text-decoration: none; colo
 //-->
 </STYLE>
 </HEAD>
+<script type="text/javascript">
+	function user_login(){
+		if(!user.userid.value){
+			alert("아이디를 입력해주세요");
+			user.userid.focus();
+			return;
+		}
+		if(!user.passwd.value){
+			alert("비밀번호를 입력해주세요");
+			user.passwd.focus();
+			return;
+		}
+		
+		user.submit();
+	}
+
+</script>
+
+
 <body bgcolor="#FFFFFF" text="#000000" leftmargin=0 
   topmargin=0 onLoad='document.fname.user_id.focus();'>
 
@@ -29,7 +48,9 @@ td   { font-family: 돋움, Verdana; font-size: 9pt; text-decoration: none; colo
   <TD width=100>&nbsp;</td>
   <TD>
     <table width="583" border="0" cellspacing="0" cellpadding="0" height="265">
-	  <form name=fname method=post action=""">
+  
+	  <form name="user" method=post action="/User/user_login">
+	  
 	    <tr>
 		  <td height="298"> 
 		    <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -62,10 +83,10 @@ td   { font-family: 돋움, Verdana; font-size: 9pt; text-decoration: none; colo
 							  <td>: 
 								<input type=password name="passwd" size=14 maxlength=12 STYLE="WIDTH:155">
 							  </td>
-							  <td><input type=image src="/Images/img/login.gif" border=0 align=absmiddle></td>
+							  <td><img src="/Images/img/login.gif" border=0 align=absmiddle onclick= "user_login()"></td>
 							</tr>
 						  </table>
-						</td>
+						</td> 
 					  </tr>
 					  <tr bgcolor="#FFFFFF"> 
 						<td bgcolor="#ffffff" align=CENTER height="138"> 

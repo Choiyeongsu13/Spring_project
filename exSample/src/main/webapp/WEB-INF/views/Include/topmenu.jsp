@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <html>
  <head><title>Web Programming Test</title>
@@ -25,13 +26,27 @@
        <font color="yellow"></font>
        </b></font>
      </td>
+     <!-- [수정] 로그인 여부(session의 "user")에 따라 로그인/로그아웃, 회원가입/정보수정을
+          각각 하나씩만 보이도록 분기. 이전에는 4개 링크가 항상 전부 노출되었음 -->
      <td  width="10%" height="25" onmouseover="style.backgroundColor='#2772D3'" onmouseout="style.backgroundColor=''">
+     <c:choose>
+       <c:when test="${empty sessionScope.user}">
      <p align="center"><font color="white" size="2"><b><a href="/User/user_login" class="white">로그인</A></b></font></p>
+       </c:when>
+       <c:otherwise>
      <p align="center"><font color="white" size="2"><b><a href="/User/user_logout" class="white">로그아웃</A></b></font></p>
+       </c:otherwise>
+     </c:choose>
      </td>
      <td  width="10%" onmouseover="style.backgroundColor='#2772D3'" onmouseout="style.backgroundColor=''">
+     <c:choose>
+       <c:when test="${empty sessionScope.user}">
      <p align="center"><font color="white" size="2"><b><a href="/User/user_insert" class="white">회원가입</a></b></font></p>
+       </c:when>
+       <c:otherwise>
      <p align="center"><font color="white" size="2"><b><a href="/User/user_modify" class="white">정보수정</a></b></font></p>
+       </c:otherwise>
+     </c:choose>
      </td>
      <td  width="10%" onmouseover="style.backgroundColor='#2772D3'" onmouseout="style.backgroundColor=''">
      <p align="center"><font color="white" size="2"><b><a href="/Notice/notice_list?page=1" class="white">공지사항</a></b></font></p>

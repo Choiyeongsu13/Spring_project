@@ -8,11 +8,22 @@
 	</select>
 	
 	
+	<!-- [수정] tel/email/gubun 은 인증 방법(핸드폰/이메일)에 따라 값이 비어 null 로 들어올 수 있는데,
+	     jdbcType을 지정하지 않으면 MyBatis가 null 값을 JdbcType.OTHER 로 setNull() 하려다
+	     ORA-17004(열 유형이 부적합합니다)를 던진다. jdbcType=VARCHAR를 명시해 null도 문제없이 들어가도록 함 -->
 	<insert id="userWrite">
-		insert into tbl_user(name, userid, passwd, tel, email)
-			values(#{name}, #{userid}, #{passwd}, #{tel}, #{email})
+		insert into tbl_user(name, userid, passwd, tel, email, gubun)
+			values(#{name,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}, #{passwd,jdbcType=VARCHAR},
+			       #{tel,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{gubun,jdbcType=VARCHAR})
 	</insert>
 	
-	
+	<!-- 회원 로그인 -->
+	<select id="userLogin" resultType="com.mnu.sample.domain.UserDTO">
+		select * from tbl_user where userid=#{userid} and passwd = #{passwd}
+	</select>
+	<!-- 로그인 한 날짜 업데이트 -->
+	<update id="userLastTimeUpdate">
+			update tbl_user set last_time= sysdate where userid=#{userid} 
+	</update>
 	
 </mapper>

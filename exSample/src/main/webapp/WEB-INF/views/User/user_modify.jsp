@@ -1,6 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
 <html>
 <head>
 <title>회원등록</title>
@@ -15,31 +14,32 @@
 <script type="text/javascript">
 $(function(){
 
+
+	var isPhoneMode = $("#mode1").is(":checked");
+
 	$("#smscheck").hide();
 	$("#emailcheck").hide();
-	$("#email").hide(); // 숨기기
-	
-	
-
-	//인증 방법 (핸드폰/이메일) 선택 상태
-	var isPhoneMode = $("#mode1").is(":checked");
+	if(isPhoneMode){
+		$("#email").hide();
+	}else{
+		$("#phone").hide();
+	}
 
 	//라디오 버튼 선택시
 	$("input[name='mode']").change(function() {
 		isPhoneMode = $("#mode1").is(":checked");
-        if ($("#mode1").is(":checked")) {
-            $("#phone").show();
-            $("#email").hide();
-           	$("#smscheck").hide();
-           	$("#emailcheck").hide();
-        } else {
-            $("#email").show();
-            $("#phone").hide();
-           	$("#smscheck").hide();
-           	$("#emailcheck").hide();
-        }
-    });
-	
+		if (isPhoneMode) {
+			$("#phone").show();
+			$("#email").hide();
+			$("#smscheck").hide();
+			$("#emailcheck").hide();
+		} else {
+			$("#email").show();
+			$("#phone").hide();
+			$("#smscheck").hide();
+			$("#emailcheck").hide();
+		}
+	});
 
 	//핸드폰 인증하기 버튼 클릭시
 	$("#phoneBtn1").click(function(){
@@ -128,36 +128,39 @@ $(function(){
 		}
 		
 	});
-	$("#insert").click(function(){
+	
+	
+	$("#modifyBtn").click(function(){
 
 	if($("#name").val().trim() == ""){
-		insert_c.innerHTML="이름을 입력해주세요";
+		modify_c.innerHTML="이름을 입력해주세요";
 	}else if($("#userid").val().trim() == ""){
-		insert_c.innerHTML="아이디를 입력해주세요";
+		modify_c.innerHTML="아이디를 입력해주세요";
 	}else if($("#passwd").val().trim() == ""){
-		insert_c.innerHTML="비밀번호를 입력해주세요";
+		modify_c.innerHTML="비밀번호를 입력해주세요";
 	}else if($("#repasswd").val().trim() == ""){
-		insert_c.innerHTML="비밀번호 확인을 진행해주세요";
+		modify_c.innerHTML="비밀번호 확인을 진행해주세요";
 	}else if($("#passwd").val() != $("#repasswd").val()){
-		insert_c.innerHTML="비밀번호가 일치하지 않습니다";
+		modify_c.innerHTML="비밀번호가 일치하지 않습니다";
 	}else if(isPhoneMode && $("#tel").val().trim() == ""){
-		insert_c.innerHTML="전화번호 인증을 진행해주세요";
+		modify_c.innerHTML="전화번호 인증을 진행해주세요";
 	}else if(isPhoneMode && $("#usersms").val() == ""){
-		insert_c.innerHTML="전화번호 인증확인을 진행해주세요";
+		modify_c.innerHTML="전화번호 인증확인을 진행해주세요";
 	}else if(!isPhoneMode && $("#email1").val().trim() == ""){
-		insert_c.innerHTML="이메일을 입력해주세요";
+		modify_c.innerHTML="이메일을 입력해주세요";
 	}else if(!isPhoneMode && $("#email2").val().trim() == ""){
-		insert_c.innerHTML="이메일 도메인을 입력해주세요";
+		modify_c.innerHTML="이메일 도메인을 입력해주세요";
 	}else{
-		insert_c.innerHTML="등록이 완료되었습니다";
+		modify_c.innerHTML="수정이 완료되었습니다";
 		$('#user').submit(); //폼 제출
 	}
 	});
-	
-	//다시쓰기
-	$("#reset_cancle").click(function(){
-		user.reset(); 
 
+	//취소하기: 수정 중이던 내용을 버리고 이전 화면으로 이동
+	$("#cancelBtn").click(function(){
+		if(confirm("수정을 취소하시겠습니까? 입력한 내용은 저장되지 않습니다.")){
+			history.length > 1 ? history.back() : location.href = "/";
+		}
 	});
 	
 	
@@ -203,7 +206,7 @@ $(function(){
 							<tr>
 								<td width=110 bgcolor=#EFF4F8>&nbsp;회원 성명<font color=red>&nbsp;*</font></td>
 								<TD BGCOLOR=WHITE>
-									<input type=text id=name name=name size=16 maxlength=20 value="" placeholder="성명은 빈칸없이 입력하세요.">
+									<input type=text id=name name=name size=16 maxlength=20 value="${user.name}" readonly>
 								</td>
 							</tr>
 							<tr>
@@ -212,7 +215,7 @@ $(function(){
 									<table cellspacing=0 cellpadding=0>
 										<tr>
 											<td align=absmiddle>
-												<input type=text id=userid name=userid size=12 maxlength=16 value="" style="width:120">
+												<input type=text id=userid name=userid size=12 maxlength=16 value="${user.userid}" style="width:120" readonly>
 											</td>
 											<td id="userID_c">
                   								[ 5~16자 이내의 영문이나 숫자만 가능합니다. ]
@@ -230,7 +233,7 @@ $(function(){
 							</tr>
 							<tr>
 								<TD BGCOLOR="#EFF4F8">&nbsp;비밀번호확인<font color=red>&nbsp;*</font></td>
-								<TD BGCOLOR=WHITE><input type=password id=repasswd name=repasswd size=8 maxlength=12 value="" style="width:80">
+								<TD BGCOLOR=WHITE><input type=password id=repasswd name=repasswd size=8 maxlength=12 value="${user.passwd}" style="width:80">
 									<font id=repasswd_c color=red>&nbsp;*비밀번호 확인을 위해서 비밀번호를 한번 더 입력해주세요. </font> 
 								</td>
 							</tr>
@@ -240,10 +243,11 @@ $(function(){
 									<input type=radio id="mode2" name="mode" value="2" ${user.gubun=='2' ? 'checked':''}>이메일
 								</td>
 							</tr>
+							
 							<tr id="phone">
 								<TD BGCOLOR="#EFF4F8">&nbsp;전화번호<font color=red>&nbsp;*</font></td>
 								<TD BGCOLOR=WHITE>
-									<input type=text id=tel name=tel size=13 maxlength=13 value="" placeholder="휴대전화번호 (-제외)">
+									<input type=text id=tel name=tel size=13 maxlength=13 value="${user.tel}" placeholder="휴대전화번호 (-제외)">
 									<input type="button" id="phoneBtn1" value="인증번호받기">
 									<font id="phone_c" size="2" color="red">&nbsp;</font>
 								</td>
@@ -254,11 +258,13 @@ $(function(){
 									<input type=text id=resms name="resms" size=13 maxlength=13 placeholder="인증번호를 입력하세요">
 									<input type="button" id="phoneBtn2" value="재발송">
                     				<font id="resms_r" size="2" color="red">&nbsp;</font>
-                    					
+
                     				<input type="button" value="인증" id="phoneBtn3" >
                     				<font id="resms_c" size="2" color="red">&nbsp;</font>
 								</td>
-							</tr>			
+							</tr>
+							
+							
 							<tr id="email">
 								<TD BGCOLOR="#EFF4F8">&nbsp;E-mail
                 					<font color=red>&nbsp;</font>
@@ -285,7 +291,8 @@ $(function(){
                     				<input type="button" value="인증" id="emailBtn3">
                     				<font id="reemail_c" size="2" color="red">&nbsp;</font>
 								</td>
-							</tr>							
+							</tr>
+							
 						</table>
 						
 						<table cellpadding=0 cellspacing=0 border=0 width=100%>
@@ -302,10 +309,10 @@ $(function(){
 							 
 							<tr bgcolor=#ffffff>
 								<td colspan=3 align=center>
-									<img src="/Images/img/u_bt06.gif" vspace=3 border=0 name=img3 id="insert" style="cursor:pointer">
-									<img src="/Images/img/u_bt05.gif" border=0 hspace=10 vspace=3 id="reset_cancle" name=img4 style="cursor:pointer">
-									<br><font id="insert_c" size="2" color="red">&nbsp;</font>
-										<font id="reset_c" size="2" color="red">&nbsp;</font>
+						
+									<input type="button" id="modifyBtn" value="수정하기">
+									<input type="button" id="cancelBtn" value="취소하기">
+									<font id="modify_c" color="red">&nbsp;</font>
 								</td>
 							</tr>
 							

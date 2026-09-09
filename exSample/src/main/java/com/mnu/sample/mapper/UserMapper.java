@@ -12,6 +12,12 @@ public interface UserMapper {
 	
 	//2.회원가입
 	public int userWrite(UserDTO userDTO);
+	
+	//3.로그인
+	public UserDTO userLogin(UserDTO userDTO);
+	
+	//4. 로그인 한 날짜업데이트
+	public void userLastTimeUpdate(String userid);
 		
 
 }

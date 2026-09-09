@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mnu.sample.domain.UserDTO;
 import com.mnu.sample.service.UserSerivce;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 @RequestMapping("User")
 public class UserController {
@@ -23,20 +26,47 @@ public class UserController {
 	@Autowired
 	private UserSerivce userSerivce;
 
-	@GetMapping("user_login") //로그인
-	public String userLogin() {
-		
+	@GetMapping("user_login") //로그인 폼
+	public String userLogin(HttpSession session) {
 		log.info("user call : login"); 
-		return"User/user_login"; 
+		
+		if(session.getAttribute("user")==null) { 
+			return"User/user_login"; //로그인 페이지로 이동
+		}else {
+			//로그인 한 사용자 일경우
+			return "redirect:/"; //컨트롤러
+		}
 	}
 	
+	//로그인처리
+	
+	@PostMapping("user_login")
+	public String userLoginPro(UserDTO userDTO, HttpServletRequest request) {
+		log.info("user call : loginpro");
+		
+		UserDTO uDTO = userSerivce.userLogin(userDTO);
+		
+		if(uDTO != null) { //로그인 성공시
+			//최근 로그인 날짜 업데이트
+			userSerivce.userLastTimeUpdate(uDTO.getUserid());
+			
+			//세션 설정
+			request.getSession().setAttribute("user", uDTO);
+			//로그인 세션 유지 시간
+			request.getSession().setMaxInactiveInterval(10*60); //10분
+		}else {
+			
+		}
+		return "User/user_login_ok"; //경고창
+	}
 	
 	//로그아웃
 	@GetMapping("user_logout") 
-	public String userLogout() {
-		
+	public String userLogout(HttpSession session) {
 		log.info("user call : logout"); 
-		return"redirect:"; //index이동
+		session.invalidate();
+		
+		return"redirect:/"; 
 		}
 	
 	
@@ -80,10 +110,13 @@ public class UserController {
 	
 	//본인인증(email)
 	
-	//정보수정폼'
+	//정보수정폼
 	@GetMapping("user_modify")
 	public String userModify() {
-		return "user/user_modify";
+		// [수정] 뷰 경로가 "user/user_modify" (소문자) 로 되어 있었다.
+		// 실제 폴더명은 "User" 이며, 배포 환경(리눅스 등 대소문자 구분 파일시스템)에서는
+		// 해당 경로를 찾지 못해 페이지가 뜨지 않는 원인이 된다.
+		return "User/user_modify";
 	}
 	
 	//정보수정 처리
