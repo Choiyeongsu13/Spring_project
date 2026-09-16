@@ -1,0 +1,15 @@
+package com.mnu.exSampleThymeleaf.domain;
+
+import lombok.Data;
+
+@Data
+public class NoticeDTO {
+	private int idx;
+	private String adid;
+	private String subject;
+	private String contents;
+	private String regdate;
+	private String readcnt;
+	
+
+}

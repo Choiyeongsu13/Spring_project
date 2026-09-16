@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mnu.exSampleThymeleaf.mapper.NoticeMapper">
+
+
+<!-- 최근글 N개 -->
+	<select id ="noticeTopList" resultType="com.mnu.exSampleThymeleaf.domain.NoticeDTO">
+
+	select * from (select * from tbl_notice order by idx desc)
+	<![CDATA[
+	where rownum <= #{num}
+	]]>
+	<!-- where rownum &lt;= #{num} -->
+	</select>
+
+	<!-- oracle12c 이상 최근글 N개 -->
+	<select id ="noticeTopList2" resultType="com.mnu.exSampleThymeleaf.domain.NoticeDTO">
+
+	select * from tbl_notice order by idx desc fetch first #{num} rows only
+	</select>
+	
+
+
+<!-- 전체 공지사항 카운트 -->
+	<select id="noticeCount" resultType="int">
+		select count(*) from tbl_notice
+	</select>
+
+<!-- 검색 조건에 맞는 공지사항 카운트 -->	
+	<select id="noticeSearchCount" resultType="int">
+		select count(*) from tbl_notice where 
+	<choose> <!-- 스위치 케이스 -->
+		<when test="search=='name'" >
+		<!-- 동시에 get,post를 처리할경우 where 이 여기에 붙음 -->	name like '%' ||  #{key} || '%'
+		</when>
+		
+		<when test="search=='subject'" >
+			subject like '%' ||  #{key} || '%'
+		</when>
+		
+		<when test="search=='contents'" >
+			contents like '%' ||  #{key} || '%'
+		</when>
+		
+	</choose>
+	</select>
+<!-- 공지사항 목록 겸용 -->
+	<select id="noticeList" resultType="com.mnu.exSampleThymeleaf.domain.NoticeDTO">
+			select * from tbl_notice
+		<choose>
+			<when test ="search=='name'">
+				where name like '%' || #{key} || '%'
+			</when>
+			<when test ="search=='subject'">
+				where subject like '%' || #{key} || '%'
+			</when>
+			<when test ="search=='contents'">
+				where contents like '%' || #{key} || '%'
+			</when>
+
+		</choose>
+			order by idx desc
+		offset #{offset} rows fetch next #{maxlist} rows only
+
+	</select>
+
+<!-- idx에 해당하는 글 목록 modify,view -->
+	<select id="noticeSelect" resultType="com.mnu.exSampleThymeleaf.domain.NoticeDTO">
+
+		select * from tbl_notice where idx = #{idx}
+	</select>
+<!-- 공지사항 조회수 증가 -->
+<update id="noticeHitUpdate">
+    update tbl_notice
+    set readcnt = readcnt + 1
+    where idx = #{idx}
+</update>
+
+
+
+
+
+</mapper>

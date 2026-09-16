@@ -1,0 +1,94 @@
+<!-- 메뉴 include -->
+<th:block th:replace="~{Include/topmenu}"></th:block>
+
+<html>
+   <head><title>게시판 작성</title>
+<!-- Toast UI Editor CSS -->
+<link
+  rel="stylesheet"
+  href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"
+/>
+
+</head>
+
+ <body topmargin="0" leftmargin="0">
+ <table border="0" width="800">
+ <tr>
+   <td width="20%" height="500" bgcolor="#ecf1ef" valign="top">
+
+   <!-- 다음에 추가할 부분 -->
+	<th:block th:replace="~{Include/login_form}"></th:block>
+
+   </td>
+
+   <td width="80%" valign="top">&nbsp;<br>
+     <img src="/Images/img/bullet-01.gif"><font size="3" face="돋움" color="blue"> <b>반갑습니다</b></font>
+     <font size="2"> - 글쓰기</font><p>
+     <img src="/Images/img/bullet-03.gif"><font size="2" face="돋움" color="orange"> 잠깐</font> &nbsp;
+     <img src="/Images/img/bullet-02.gif"><font size="2" face="돋움">는 필수 입력 사항입니다.</font><p>
+     <form id="board" name="name" method="post" action="/BoardPhoto?cmd=boardPhotoWritePro">
+
+	  <table border="0">
+       <tr>
+         <td width="5%" align="right"><img src="/Images/img/bullet-02.gif"></td>
+         <td width="15%"><font size="2" face="돋움">글쓴이</font></td>
+         <td width="80%">
+         <input type="text" size="20" id="name" name="name"></td>
+       </tr>
+	   <tr>
+         <td align="right"><img src="/Images/img/bullet-02.gif"></td>
+         <td><font size="2" face="돋움">제목</font></td>
+         <td><input type="text" size="60" id="subject" name="subject" ></td>
+       </tr>
+       <tr>
+         <td align="right"><img src="/Images/img/bullet-02.gif"></td>
+         <td><font size="2" face="돋움">내용</font></td>
+         <td><div id="editor" style="width: 500px;"></div>
+         </td>
+       </tr>
+	   <tr>
+         <td align="right"><img src="/Images/img/bullet-02.gif"></td>
+         <td><font size="2" face="돋움">비밀번호</font></td>
+          <td><input type="password" size="10" id="pass" name="pass" ><font size="2" face="돋움">*.수정과 삭제시 꼭 입력하셔야 합니다.</font></td>
+        </tr>
+        <tr></tr>
+		<tr>
+          <td align="right">&nbsp;</td>
+          <td><font size="2">&nbsp;</font></td>
+          <td>
+                <img src="/Images/img/save.gif" border=0 id="btn_send">&nbsp;&nbsp;&nbsp;
+                <img src="/Images/img/cancle.gif" border=0 id="btn_cancle">
+          </td>
+        </tr>
+      </table>
+      </form>
+    </td>
+  </tr>
+  </table>
+  </body>
+  </html>
+
+<!-- Toast UI Editor JS -->
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+   
+<script>
+const editor = new toastui.Editor({
+    el: document.querySelector('#editor'),
+    height: '320px',
+    initialEditType: 'wysiwyg',
+    previewStyle: 'vertical',
+    placeholder: '자유롭게 글을 작성해 주세요.',
+    hooks: {
+        addImageBlobHook: (blob, callback) => {
+            // 실제 서비스에서는 서버 업로드 후 URL 반환
+            const reader = new FileReader();
+            reader.onload = () => {
+                callback(reader.result, '이미지');
+            };
+            reader.readAsDataURL(blob);
+        }
+    }
+});
+
+</script>
+  

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mnu.exSampleThymeleaf.mapper.BoardMapper">
+
+
+
+	<!-- oracle12c 이상 최근글 N개 -->
+	<select id ="boardTopList" resultType="com.mnu.exSampleThymeleaf.domain.BoardDTO">
+		
+	select * from tbl_board order by idx desc fetch first #{num} rows only
+	</select>
+	
+	<!-- 1. 전체 글 카운터 get -->
+	<select id = "boardCount" resultType="int">
+		select count(*) from tbl_board
+	</select>
+	
+	<!-- 2. 검색 조건에 해당하는 글수 post -->
+<select id ="boardCountSearch" resultType="int">
+	select count(*) from tbl_board where 
+	<choose> <!-- 스위치 케이스 -->
+		<when test="search=='name'" >
+		<!-- 동시에 get,post를 처리할경우 where 이 여기에 붙음 -->	name like '%' ||  #{key} || '%'
+		</when>
+		
+		<when test="search=='subject'" >
+			subject like '%' ||  #{key} || '%'
+		</when>
+		
+		<when test="search=='contents'" >
+			contents like '%' ||  #{key} || '%'
+		</when>
+		
+	</choose>
+</select>
+
+
+
+<!--  2. 검색 조건에 해당하는 글수 MySql(MariaDB) -->
+<!-- 
+	<select id ="BoardCountSearch" resultType="string">
+		select count(*) from tbl_board where 
+		<choose> 
+			<when test="search=='name'" >
+				name like  concat ('%', #{key} ,'%')
+			</when>
+		
+		<when test="search=='subject'" >
+			subject like concat ('%', #{key}, '%')
+		</when>
+		
+		<when test="search=='contents'" >
+			contents like concat ('%' ,  #{key} , '%')
+		</when>
+		
+	</choose>
+</select>
+ -->
+
+
+	<!-- 3. 전체 목록 get-->
+<select id ="boardList" resultType="com.mnu.exSampleThymeleaf.domain.BoardDTO">
+		select * from tbl_board order by idx desc
+</select>
+
+
+
+	
+	<!-- 4. 검색조건에 맞는 목록 post -->
+<select id="boardListSearch" resultType="com.mnu.exSampleThymeleaf.domain.BoardDTO">
+		select * from tbl_board where 
+		<choose>
+			<when test ="search=='name'">
+				name like '%' || #{key} || '%'
+			</when>
+			<when test ="search=='subject'">
+				subject like '%' || #{key} || '%'
+			</when>
+			<when test ="search=='contents'">
+				contents like '%' || #{key} || '%'
+			</when>
+
+		</choose>
+		
+		order by idx desc
+</select>
+	
+<!-- 3-1 전체 목록 리스트 (페이지 인덱싱)-->
+<select id="boardListPage" resultType="com.mnu.exSampleThymeleaf.domain.BoardDTO">
+
+	select * from tbl_board order by idx desc 
+		offset #{offset} rows fetch next #{maxlist} rows only
+</select>
+<!-- 4-1 검색조건 + 목록 리스트-->
+<select id="boardListSearchPage" resultType="com.mnu.exSampleThymeleaf.domain.BoardDTO">
+			select * from tbl_board
+				<choose>
+			<when test ="search=='name'">
+				where name like '%' || #{key} || '%'
+			</when>
+			<when test ="search=='subject'">
+				where subject like '%' || #{key} || '%'
+			</when>
+			<when test ="search=='contents'">
+				where contents like '%' || #{key} || '%'
+			</when>
+
+		</choose>
+		
+			order by idx desc 
+		offset #{offset} rows fetch next #{maxlist} rows only
+		
+</select>
+	
+	
+	
+	
+	
+	<!-- 5. 글 등록 -->
+	
+	<insert id="boardWrite">
+		insert into tbl_board (idx,name,subject,contents,pass) values(tbl_board_seq_idx.nextval, #{name},#{subject}
+		, #{contents}, #{pass})
+	</insert>
+	<!-- 6. 특정글 검색 (view, modify  -->
+
+	<update id ="boardHits">
+		update tbl_board set readcnt = readcnt +1 where idx = #{idx}
+	</update>
+	<select id ="boardView" resultType="com.mnu.exSampleThymeleaf.domain.BoardDTO" >
+			select * from tbl_board where idx = #{idx}
+	</select>
+	
+	
+	<!-- 7. 수정처리  -->
+	<update id="boardModifyPro">
+		update tbl_board set email=#{email}, subject=#{subject}, contents=#{contents}
+		where idx = #{idx} and pass = #{pass}
+	</update>
+	<!-- 8. 삭제처리  -->
+		<delete id="boardDelete">
+			delete from tbl_board where idx = #{idx} and pass = #{pass}
+		</delete>
+
+	
+	
+</mapper>
+ 

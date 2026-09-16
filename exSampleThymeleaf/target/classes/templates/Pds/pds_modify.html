@@ -1,0 +1,76 @@
+
+<!-- 메뉴 include -->
+<th:block th:replace="~{Include/topmenu}"></th:block>
+
+<html xmlns:th="http://www.thymeleaf.org">
+   <head><title> 자료 수정 </title>
+   </head>
+<body>
+<link rel="stylesheet" type="text/css" href="/stylesheet.css">
+
+<table border="0" width="800">
+ <tr>
+   <td width="20%" height="500" bgcolor="#ecf1ef" valign="top">
+
+	<!--     다음에 추가할 로그인  -->
+	<th:block th:replace="~{Include/login_form}"></th:block>
+
+   </td>
+   <td width="80%" valign="top">&nbsp;<br>
+     <img src="/Images/img/bullet-01.gif"><font size="3" face="돋움" color="blue"> <b>참 좋은 자료실</b></font>
+     <font size="2"> - 자료수정</font><p>
+     <font size="2" color="red" th:if="${error != null}" th:text="${error}">비밀번호가 일치하지 않습니다.</font><p th:if="${error != null}">
+
+	 <form method="post" action="/Pds/pds_modify" enctype="multipart/form-data">
+	  <input type="hidden" name="idx" th:value="${pds.idx}">
+	  <input type="hidden" name="page" th:value="${page}">
+	  <table border="0" >
+		<tr>
+         <td width="5%" align="right">&nbsp;</td>
+         <td width="15%"><font size="2" face="돋움">글쓴이</font></td>
+         <td width="80%">
+			<font size="2" face="돋움" th:text="${pds.name}">홍길동</font></td>
+		</tr>
+		<tr>
+		  <td align="right">&nbsp;</td>
+          <td><font size="2" face="돋움">메일주소</font></td>
+		  <td><input type="text" size="20" name="email" th:value="${pds.email}"></td>
+		</tr>
+       <tr>
+         <td align="right"><img src="/Images/img/bullet-02.gif"></td>
+         <td><font size="2" face="돋움">제목</font></td>
+         <td><input type="text" size="60" name="subject" th:value="${pds.subject}"></td>
+       </tr>
+       <tr>
+         <td align="right"><img src="/Images/img/bullet-02.gif"></td>
+         <td><font size="2" face="돋움">내용</font></td>
+         <td><textarea wrap="physical" rows="10" name="contents" cols="60" th:text="${pds.contents}"></textarea></td>
+       </tr>
+		<tr>
+		  <td align="right">&nbsp;</td>
+		  <td><font size="2" face="돋움">첨부파일</font></td>
+		  <td><font size="2" face="돋움" th:text="${displayFilename} ?: '(없음)'">test.zip</font> <input type="file" name="file" size="30"><font size="2" face="돋움">&nbsp;* 새 파일을 선택하면 기존 파일을 대체합니다.</font></td></tr>
+       <tr>
+         <td align="right"><img src="/Images/img/bullet-02.gif"></td>
+         <td><font size="2" face="돋움">비밀번호</font></td>
+          <td><input type="password" size="10" name="pass" >
+          <font size="2" face="돋움">*.글 작성시 입력한 비밀번호를 입력하세요.</font>
+         </td>
+        </tr>
+
+		<tr>
+          <td align="right">&nbsp;</td>
+          <td><font size="2">&nbsp;</font></td>
+          <td align="center">
+			<input type="image" src="/Images/img/purple_save.gif" width="56" height="18" border="0">
+			<a th:href="@{/Pds/pds_view(idx=${pds.idx}, page=${page})}"><img src="/Images/img/purple_cancle.gif" width="56" height="18" border="0"></a>
+
+		  </td>
+        </tr>
+      </table>
+      </form>
+    </td>
+  </tr>
+ </table>
+</body>
+</html>
