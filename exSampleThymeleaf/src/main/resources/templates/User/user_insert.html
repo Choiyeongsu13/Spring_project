@@ -1,4 +1,4 @@
-<!-- 메뉴 include -->
+	<!-- 메뉴 include -->
 <th:block th:replace="~{Include/topmenu}"></th:block>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -37,6 +37,10 @@ $(function(){
 	
 
 
+	//서버가 발급한 인증번호를 잠시 기억해뒀다가 사용자가 입력한 값과 비교(클라이언트 비교 방식)
+	var smsAuthCode = null;
+	var emailAuthCode = null;
+
 	//핸드폰 인증하기/재발송 버튼 클릭시
 	function sendSms(){
 		var tel = $("#tel").val();
@@ -44,10 +48,11 @@ $(function(){
 			alert("전화번호를 입력하세요");
 			return;
 		}
-		$.post("/User/send_sms", {tel: tel}, function(res){
-			alert(res.message);
-			if(res.success) $("#smscheck").show();
-		}, "json").fail(function(){
+		$.post("/User/user_sms", {tel: tel}, function(res){
+			smsAuthCode = res;
+			alert("인증번호를 발송했습니다.");
+			$("#smscheck").show();
+		}).fail(function(){
 			alert("인증번호 발송에 실패했습니다. 잠시 후 다시 시도해주세요.");
 		});
 	}
@@ -57,12 +62,9 @@ $(function(){
 	//핸드폰 인증번호 확인
 	$("#phoneBtn3").click(function(){
 		var code = $("#resms").val();
-		$.post("/User/verify_sms", {code: code}, function(res){
-			$("#resms_c").text(res.message);
-			if(res.success) alert(res.message);
-		}, "json").fail(function(){
-			alert("인증 확인에 실패했습니다. 잠시 후 다시 시도해주세요.");
-		});
+		var matched = smsAuthCode != null && smsAuthCode == code;
+		$("#resms_c").text(matched ? "인증되었습니다." : "인증번호가 일치하지 않습니다.");
+		alert(matched ? "인증되었습니다." : "인증번호가 일치하지 않습니다.");
 	});
 
 	//이메일 인증하기/재발송 버튼 클릭시
@@ -72,10 +74,11 @@ $(function(){
 			alert("이메일을 입력하세요");
 			return;
 		}
-		$.post("/User/send_email", {email: email}, function(res){
-			alert(res.message);
-			if(res.success) $("#emailcheck").show();
-		}, "json").fail(function(){
+		$.post("/User/user_email", {email: email}, function(res){
+			emailAuthCode = res;
+			alert("인증번호를 발송했습니다.");
+			$("#emailcheck").show();
+		}).fail(function(){
 			alert("인증번호 발송에 실패했습니다. 메일 서버 설정을 확인해주세요.");
 		});
 	}
@@ -85,12 +88,9 @@ $(function(){
 	//이메일 인증번호 확인
 	$("#emailBtn3").click(function(){
 		var code = $("#reemail").val();
-		$.post("/User/verify_email", {code: code}, function(res){
-			$("#reemail_c").text(res.message);
-			if(res.success) alert(res.message);
-		}, "json").fail(function(){
-			alert("인증 확인에 실패했습니다. 잠시 후 다시 시도해주세요.");
-		});
+		var matched = emailAuthCode != null && emailAuthCode == code;
+		$("#reemail_c").text(matched ? "인증되었습니다." : "인증번호가 일치하지 않습니다.");
+		alert(matched ? "인증되었습니다." : "인증번호가 일치하지 않습니다.");
 	});
 
 	//등록 버튼 클릭시 최소한의 클라이언트 검증

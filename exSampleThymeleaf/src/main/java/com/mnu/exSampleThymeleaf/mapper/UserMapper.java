@@ -16,10 +16,7 @@ public interface UserMapper {
 
 	int userLastTimeUpdate(@Param("userid") String userid);
 
-	String userFindId(@Param("name") String name, @Param("email") String email);
-
-	int userCheckIdEmail(@Param("userid") String userid, @Param("email") String email);
-
-	int userUpdatePasswd(@Param("userid") String userid, @Param("passwd") String passwd);
+	//userid로 회원 조회
+	UserDTO userSelect(@Param("userid") String userid);
 
 }

@@ -1,0 +1,61 @@
+<th:block xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+ <!-- 비로그인 : 로그인 폼 -->
+ <form name="login_form" th:action="@{/Join/user_login_ok}" method="post" sec:authorize="isAnonymous()">
+   <table width="100%" height="120" border="0">
+     <tr>
+       <td colspan="2" bgcolor="#6FA0E0" height="20" align="center">
+         <font size="2" color="white"><b>Member Login</b></font>
+       </td>
+     </tr>
+     <tr>
+       <td><font size="2">아이디</font></td>
+       <td><input type="text" size="10" name="userid"></td>
+     </tr>
+     <tr>
+       <td><font size="2">비밀번호</font></td>
+       <td><input type="password" size="10" name="passwd"></td>
+     </tr>
+     <tr>
+       <td><input type="image" src="/Images/img/login1.gif" border="0"></td>
+       <td><a href="/Join/user_insert"><img src="/Images/img/regist.gif" border="0"></a></td>
+     </tr>
+   </table>
+ </form>
+
+ <!-- 관리자 로그인 -->
+ <table width="100%" height="120" border="0" sec:authorize="hasRole('ADMIN')">
+   <tr>
+     <td bgcolor="#6FA0E0" align="center" height="20">
+       <font size="2" color="white"><span sec:authentication="name"></span> 님!</font>
+     </td>
+   </tr>
+   <tr>
+     <td align="center">
+       <font size="2">
+       <a href="/Admin/notice_list">관리자 페이지</a><br>
+       <a href="/Join/user_logout">로그아웃</a><br>
+       <a href="/User/user_mypage">회원정보수정</a><br>
+       </font>
+     </td>
+   </tr>
+ </table>
+
+ <!-- 일반회원 로그인 -->
+ <table width="100%" height="120" border="0" sec:authorize="hasRole('USER') and !hasRole('ADMIN')">
+   <tr>
+     <td bgcolor="#6FA0E0" align="center" height="20">
+       <font size="2" color="white"><span sec:authentication="name"></span> 님!</font>
+     </td>
+   </tr>
+   <tr>
+     <td align="center">
+       <font size="2">
+       <a href="/Join/user_logout">로그아웃</a><br>
+       <a href="/User/user_mypage">회원정보수정</a><br>
+       </font>
+     </td>
+   </tr>
+ </table>
+
+</th:block>
