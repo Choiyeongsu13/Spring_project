@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.mnu.sample.domain.UserDTO;
 import com.mnu.sample.service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -51,6 +53,7 @@ public class UserController {
 		userService.userWrite(userDTO);
 		return "redirect:/"; //회원가입 인덱스로 이동
 	}
+	
 	//ID 중복 검사
 	
 	
@@ -65,6 +68,17 @@ public class UserController {
 		log.info("user call : user_mypage");
 		return "User/user_mypage";
 	}
+	
+	//로그아웃 처리
+	@GetMapping("/Join/user_logout")
+	public String userLogout(HttpServletRequest request) {
+	 log.info("user call : user_logout");
+	 HttpSession session = request.getSession();
+	 if(session != null) { 
+			 session.invalidate();
+	}
+	 return "/Join/user_logout";
+}
 }
 
 

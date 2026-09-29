@@ -44,7 +44,9 @@
     <TD width=100>&nbsp;</td> 
     <TD> 
       <table width="583" border="0" cellspacing="0" cellpadding="0" height="265"> 
-        <form id=user name="user" method=post th:action="@{/Join/user_login_ok}" onSubmit="return user_login()"> 
+        <form id="user" name="user" method=post th:action="@{/Join/user_login}"> 
+        
+        
         <tr> 
           <td height="298"> 
             <table width="100%" border="0" cellspacing="0" cellpadding="0"> 
@@ -73,7 +75,7 @@
                             <td><img src="/Images/img/h_bl02.gif" width="18" height="16"></td> 
                             <td nowrap>비밀번호</td> 
                             <td>: <input type=password name="passwd" size=14 maxlength=12 STYLE="WIDTH:155"> </td> 
-                            <td><input type=image src="/Images/img/login.gif" border=0 align=absmiddle></td> 
+                            <td><img src="/Images/img/login.gif" border=0 align=absmiddle onClick="user_login()"></td> 
                           </tr> 
                         </table> 
                       </td> 
