@@ -20,21 +20,21 @@ public class EmpRepositoryTest {
 	@Autowired
 	private EmpRepository empRepository;
 	
-//	@Test
-//	public void insertCeptTest() {
-//		EmpEntity entity = EmpEntity.builder()
-//				.eno(110)
-//				.ename("choi")
-//				.manager(1000)
-//				.hiredate(LocalDate.of(1980, 12, 17))
-//				.salary(800)
-//				.dno(20)
-//				.build();
-//		EmpEntity emp = empRepository.save(entity);
-//		EmpResponseDTO resDTO = new EmpResponseDTO(entity);
-//		System.out.println("등록된 번호 : " + resDTO.getEno());
-//	}
-//	
+	@Test
+	public void insertCeptTest() {
+		EmpEntity entity = EmpEntity.builder()
+				.eno(110)
+				.ename("choi")
+				.manager(1000)
+				.hiredate(LocalDate.of(1980, 12, 17))
+				.salary(800)
+				.dno(20)
+				.build();
+		EmpEntity emp = empRepository.save(entity);
+		EmpResponseDTO resDTO = new EmpResponseDTO(entity);
+		System.out.println("등록된 번호 : " + resDTO.getEno());
+	}
+	
 //	//dno 이용한 검색
 //	
 //	@Test
