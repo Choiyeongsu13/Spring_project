@@ -13,30 +13,32 @@
 
 </head>
  <body>
- <table>
+ <table width=800>
    <tr>
-     <td width="19%" rowspan="4" valign="bottom" bgcolor="#000000">
-       <a href="/"><img src="/Images/img/jsl_logo1.png" width="150" height="80" border="0"></a><br>
+     <td width="20%" rowspan="4" valign="bottom" bgcolor="#000000">
+       <a href="/"><img src="/Images/img/jsl_logo1.png" width="168" height="80" border="0"></a>
        <font style="font-size:9pt;color:white;font-family:돋움"><b>Total 136,489
        <font color="yellow"></font>
        | Now 178
        <font color="yellow"></font>
        </b></font>
      </td>
+     
      <td  width="10%" height="25" onmouseover="style.backgroundColor='#2772D3'" onmouseout="style.backgroundColor=''">
      <p align="center" sec:authorize="isAnonymous()">
-     <font color="white" size="2"><b><a href="/Join/user_login" class="white">로그인</A></b></font>
+     	<font color="white" size="2"><b><a href="/Join/user_login" class="white">로그인</A></b></font>
      </p>
      <p align="center" sec:authorize="isAuthenticated()">
-     <font color="white" size="2"><b><a href="/Join/user_logout" class="white">로그아웃</A></b></font>
+     	<font color="white" size="2"><b><a href="/Join/user_logout" class="white">로그아웃</A></b></font>
      </p>
      </td>
+     
      <td  width="10%" onmouseover="style.backgroundColor='#2772D3'" onmouseout="style.backgroundColor=''">
      <p align="center" sec:authorize="isAnonymous()">
-     <font color="white" size="2"><b><a href="/Join/user_insert" class="white">회원가입</a></b></font>
+     	<font color="white" size="2"><b><a href="/Join/user_insert" class="white">회원가입</a></b></font>
      </p>
      <p align="center" sec:authorize="isAuthenticated()">
-     <font color="white" size="2"><b><a href="/User/user_mypage" class="white">MyPage</a></b></font>
+     	<font color="white" size="2"><b><a href="/User/user_mypage" class="white">MyPage</a></b></font>
      </p>
      </td>
      <td  width="10%" onmouseover="style.backgroundColor='#2772D3'" onmouseout="style.backgroundColor=''">
@@ -54,29 +56,24 @@
      <td  width="10%" onmouseover="style.backgroundColor='#2772D3'" onmouseout="style.backgroundColor=''">
      <p align="center"><font color="white" size="2"><b><a href="/Gallery/gallery_list" class="white">겔러리</a></b></font></p>
      </td>
+     
      <td  width="10%" onmouseover="style.backgroundColor='#2772D3'" onmouseout="style.backgroundColor=''">
      <p align="center" sec:authorize="isAnonymous()"></p>
-     
+
      <p align="center" sec:authorize="hasRole('USER')">
-     <font color="#2772D3" size="2"><b><a href="/Admin/admin_login"> 님</a></b></font>
+     	<font color="#2772D3" size="2"><b sec:authentication="Principal.username"></b> 님</font>
      </p>
-     
-     <p align="center" sec:authorize="hasRole('ADMIN')">
-     <font color="white" size="2"><b><a href="/Admin/admin_login" class="white">관리자</a></b></font>
+     <p sec:authorize="hasRole('ADMIN')" align="center">
+     	<font color="white" size="2"><b><a href="/Admin/notice_list" class="white">관리자</a></b></font>
      </p>
      </td>
+   
    </tr>                   
-   <tr>
-     <td colspan="8">
-     <p><img src="/Images/img/bar-01.gif" width="100%" height="1" border="0"></p>
-     </td>
-   </tr>
    <tr>
      <td colspan="8"><p><img src="/Images/img/bar-01.gif" width="100%" height="1" border="0"></p></td>
    </tr>
    <tr>
      <td><p><b><span style="font-size:15pt;">&nbsp;Search</span></b></p></td>
-     <form action="" method="post">
      <td colspan="5">
      <p>&nbsp;
        <Select name="genre" size="1">
@@ -93,7 +90,6 @@
          <input type="text" name="keyword" size="12">
          <input type="image" src="/Images/img/search2.gif">
      </td>
-     </form>
    </tr>
  </table>  
  </body>

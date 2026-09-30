@@ -17,6 +17,7 @@ public class SecurityConfig {
 				.requestMatchers("/User/**").hasAnyRole("USER")
 				.requestMatchers("/Manager/**").hasAnyRole("MANAGER","ADMIN")
 				.requestMatchers("/Admin/**").hasAnyRole("ADMIN") //admin  폴더는 ADMIN 역할만
+				.requestMatchers("/BoardPhoto/**").hasAnyRole("ADMIN","MANAGER")
 				.anyRequest().permitAll() //그외 모든곳은 모두가 접근가능
 				)
 		.formLogin(login -> login
