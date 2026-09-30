@@ -21,7 +21,7 @@ public class DeptRepositoryTest {
 	@Test
 	public void insertCeptTest() {
 		DeptEntity entity = DeptEntity.builder()
-				.dno(100)
+				.dno(50)
 				.dname("총무과")
 				.loc("목포")
 				.build();
@@ -42,8 +42,33 @@ public class DeptRepositoryTest {
 	
 	@Test
 	public void findAllTest() {
-//		List<DeptEntity> dList = deptRepository.findAll(); //오름차순
-		List<DeptEntity> dList = deptRepository.findAll(Sort.by(Sort.Direction.DESC,"dno")); //내림차순
+		List<DeptEntity> dList = deptRepository.findAll(); //오름차순
+//		List<DeptEntity> dList = deptRepository.findAll(Sort.by(Sort.Direction.DESC,"dno")); //내림차순
+
+		for(DeptEntity entity: dList) {
+			DeptResponseDTO dto = new DeptResponseDTO(entity);
+			System.out.print(dto.getDno() + " 1");
+		System.out.print(dto.getDname() + "2 ");
+			System.out.println(dto.getLoc() + "3 ");
+		}
+	}
+	
+//	//기본키를 이용한 삭제
+//	@Test
+//	public void delete() {
+//		DeptEntity entity = deptRepository.findById(100)
+//			.orElseThrow(()-> new IllegalArgumentException("등록된 id 없음"));
+//		deptRepository.delete(entity);
+////		deptRepository.deleteById(100); // 바로삭제
+//		findAllTest();
+//	}
+	
+	//지역명 검색
+	
+	@Test
+	public void findbyLocTest() {
+		List<DeptEntity> dList = deptRepository.findAll(); //오름차순
+//		List<DeptEntity> dList = deptRepository.findAll(Sort.by(Sort.Direction.DESC,"목포")); //내림차순
 
 		for(DeptEntity entity: dList) {
 			DeptResponseDTO dto = new DeptResponseDTO(entity);
@@ -53,15 +78,17 @@ public class DeptRepositoryTest {
 		}
 	}
 	
-	//기본키를 이용한 삭제
-	@Test
-	public void delete() {
-		DeptEntity entity = deptRepository.findById(100)
-			.orElseThrow(()-> new IllegalArgumentException("등록된 id 없음"));
-		deptRepository.delete(entity);
-//		deptRepository.deleteById(100); // 바로삭제
-		findAllTest();
-	}
+//	//수정 테스트
+//	@Test
+//	public void updateCeptTest() {
+//		DeptEntity entity = DeptEntity.builder()
+//				.dno(100)
+//				.dname("회계과")
+//				.build();
+//	DeptEntity dept = deptRepository.save(entity);
+//	DeptResponseDTO resDTO = new DeptResponseDTO(entity);
+//		System.out.println("등록된 총무명 : " + resDTO.getDno());
+//	}
 	
 	
 }
