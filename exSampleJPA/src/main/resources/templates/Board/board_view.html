@@ -32,16 +32,16 @@
        <table border="0" width="90%" align="center" cellspacing="0"  style="border-width:1px;border-color:#0066cc;border-style:outset;">
          <tr bgcolor="e3e9ff">
            <td class="title">
-             <img src="/Images/img/bullet-04.gif"> <font size="2" face="돋움">
-                  제목부분</font>
+             <img src="/Images/img/bullet-04.gif"> <font size="2" face="돋움" th:text="${board.subject}">
+                 </font>
            </td>
          </tr>
          <tr>
            <td class="content">
              <p align="right"><font size="2" face="돋움">
-              <a class="list" href="mailto:ein1027@nate.com">나종민</a> / <font size="2" face="돋움">2007-1022 / 2번 읽음</font>
-             <p>
-             내용이 들어가는 부분<p><!--contents의 내용을 <BR>태그로 처리-->
+              <a class="list" href="" th:text="${board.name}"></a> / 
+              <font size="2" face="돋움" th:text="|${#strings.substring(board.regdate,0,10)} / ${board.readcnt} 번 읽음|"></font>
+             <p th:utext="${#strings.replace(board.contents,newlineChar,'&lt;br/&gt;')}"></p><!-- 여러줄에 처리하는textx utext-->
            </td>
          </tr>
        </table>
@@ -50,22 +50,47 @@
       <p align="center">
       <font size="2">
        <!-- 새글쓰기 -->
-       <a href="">
+       <a th:href="@{/Board/board_write(page=1)}">
        <img src="/Images/img/write.jpg" border="0"></a>&nbsp;&nbsp;
-	   <!-- 답글쓰기 -->
-       <a href="">
-       <img src="/Images/reply.gif" border="0"></a>&nbsp;&nbsp;
 	   <!-- 수정하기 -->
-       <a href="">
+       <a th:href="@{/Board/board_modify(idx=${board.idx},page=1)}">
        <img src="/Images/img/edit.gif" border="0"></a>&nbsp;&nbsp;
          <!-- 삭제하기 -->
-       <a href=""><img src="/Images/img/del.gif" border="0"></a>&nbsp;&nbsp;
+      
+       <a href="javascript:board_delete1()"><img src="/Images/img/del.gif" border="0"></a>&nbsp;&nbsp;
+
+       <a th:href="|javascript:board_delete2(${board.idx}, 1)|"><img src="/Images/img/del.gif" border="0"></a>&nbsp;&nbsp;
+       
+       <a href="#" onclick="board_delete3()"><img src="/Images/img/del.gif" border="0"></a>&nbsp;&nbsp;
+       
+       <a href="#" th:onclick="|board_delete4(${board.idx}, 1)|"><img src="/Images/img/del.gif" border="0"></a>&nbsp;&nbsp;
+     
        <!-- 목록보기 -->
-       <a href=""><img src="/Images/img/list-2.gif" border="0"></a>&nbsp;&nbsp;
+       <a th:href="@{/Board/board_list(page=1)}"><img src="/Images/img/list-2.gif" border="0"></a>&nbsp;&nbsp;
       </font>
     </td>
   </tr>
   </table>
   </body>
   </html>
-
+<script th:inline="javascript">
+	function board_delete1(){
+		//var url="/Board/board_delete?idx=" + $(board.idx) + "&page= "+1;
+		var url="/Board/board_delete?idx=[[${board.idx}]]&page=1";
+		window.open(url,"board_delete","width=300, height=300");
+	}
+	function board_delete2(idx,page){
+		var url="/Board/board_delete?idx="+ idx +"&page="+page;
+		window.open(url,"board_delete","width=300, height=300");
+	}
+	function board_delete3(){
+		var url="/Board/board_delete?idx=[[${board.idx}]]&page=1";
+		window.open(url,"board_delete","width=300, height=300");
+			
+	}
+	function board_delete4(idx,page){
+		var url="/Board/board_delete?idx="+ idx +"&page="+page;
+		window.open(url,"board_delete","width=300, height=300");
+	}
+	
+</script>
