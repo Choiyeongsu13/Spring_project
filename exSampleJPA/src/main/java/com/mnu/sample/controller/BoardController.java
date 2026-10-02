@@ -56,6 +56,7 @@ public class BoardController {
 		
 		model.addAttribute("board",board);
 		model.addAttribute("newlineChar","\n");
+		model.addAttribute("page",1); //임시
 		
 		
 		log.info("board call : board_view");
@@ -72,12 +73,10 @@ public class BoardController {
 	
 	//삭제 처리
 	@PostMapping("board_delete")
-	public String boardDeletePro(@RequestParam("idx")int idx, @RequestParam("pass") String pass,
-			@RequestParam(value="page", defaultValue="1") int page, Model model) {
+	public String boardDeletePro(@RequestParam("idx")int idx, @RequestParam("pass") String pass,Model model) {
 		log.info("board call : board_deletePro");
 		int row = boardService.boardDelete(idx, pass);
 		model.addAttribute("row",row);
-		model.addAttribute("page",page);
 		return "Board/board_delete_pro"; //경고 출력용
 	}
 	
