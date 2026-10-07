@@ -28,7 +28,7 @@ public class BoardEntity {
 		private LocalDateTime regdate = LocalDateTime.now(); //날짜시간
 		private String subject;
 		private String contents;
-		private String readcnt;
+		private Integer readcnt = 0; //조회수 (기존 글 중 null인 행이 있어서 Integer, 새 글은 0으로 저장)
 		private LocalDateTime updatedate;
 		
 		

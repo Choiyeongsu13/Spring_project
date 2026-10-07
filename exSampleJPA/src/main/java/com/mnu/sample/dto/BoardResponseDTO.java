@@ -17,7 +17,7 @@ public class BoardResponseDTO {
 	private LocalDateTime regdate;
 	private String subject;
 	private String contents;
-	private String readcnt;
+	private int readcnt;
 	private LocalDateTime updatedate;
 	
 	//entity -> dto
@@ -27,7 +27,7 @@ public class BoardResponseDTO {
 		this.name=entity.getName();
 		this.subject=entity.getSubject();
 		this.contents=entity.getContents();
-		this.readcnt=entity.getReadcnt();
+		this.readcnt=(entity.getReadcnt() == null) ? 0 : entity.getReadcnt(); //null이면 0
 		this.regdate=entity.getRegdate();
 		this.updatedate=entity.getUpdatedate();
 	}
