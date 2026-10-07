@@ -25,19 +25,23 @@
      </td>
      
      <td  width="10%" height="25" onmouseover="style.backgroundColor='#2772D3'" onmouseout="style.backgroundColor=''">
-     <p align="center">
-     	<font color="white" size="2"><b><a href="/Join/user_login" class="white">로그인</A></b></font>
+     <p align="center"
+     th:if="${session.user == null}" >
+     	<font color="white" size="2"><b><a href="/User/user_login" class="white">로그인</A></b></font>
      </p>
-     <p align="center">
-     	<font color="white" size="2"><b><a href="/Join/user_logout" class="white">로그아웃</A></b></font>
+     <p align="center"
+      th:if="${session.user != null}" >
+     	<font color="white" size="2"><b><a href="/User/user_logout" class="white">로그아웃</A></b></font>
      </p>
      </td>
 
      <td  width="10%" onmouseover="style.backgroundColor='#2772D3'" onmouseout="style.backgroundColor=''">
-     <p align="center">
-     	<font color="white" size="2"><b><a href="/Join/user_insert" class="white">회원가입</a></b></font>
+     <p align="center" 
+     th:if="${session.user == null}">
+     	<font color="white" size="2"><b><a href="/User/user_insert" class="white">회원가입</a></b></font>
      </p>
-     <p align="center">
+     <p align="center"
+     th:if="${session.user != null}">
      	<font color="white" size="2"><b><a href="/User/user_mypage" class="white">MyPage</a></b></font>
      </p>
      </td>
