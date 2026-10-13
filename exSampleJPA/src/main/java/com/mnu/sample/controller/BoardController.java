@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mnu.sample.dto.BoardRequestDTO;
 import com.mnu.sample.dto.BoardResponseDTO;
+import com.mnu.sample.exception.CustomException;
 import com.mnu.sample.repository.BoardRepository;
 import com.mnu.sample.service.BoardService;
 
@@ -148,11 +149,16 @@ public class BoardController {
 	
 	//수정처리
 	@PostMapping("board_modify")
-	public String boardModifyPro(@RequestParam("idx") int idx, @ModelAttribute("page") int page, BoardRequestDTO board, Model model) {
+	public String boardModifyPro(@RequestParam("idx") int idx, @ModelAttribute("page") int page, BoardRequestDTO board, Model model) throws CustomException {
 		log.info("Board Call : board_modify_pro");
 		
-		model.addAttribute("row", boardService.boardModifyPro(idx, board));
+		int result =boardService.boardModifyPro(idx, board);
+		if(result==0) {
+			throw new CustomException("비밀번호가 맞지않습니다"); 
+		}
+		model.addAttribute("row",result);
 		return "Board/board_modify_pro";
+
 	}
 
 

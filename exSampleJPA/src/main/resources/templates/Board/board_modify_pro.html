@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<span th:if="${row==1}">
+		<script>
+			location.replace("/Board/board_list?page=[[${page}]]");
+		</script>
+	</span>
+	<span th:if="${row==0}">
+		<script>
+			alert("비번오류입니다");
+			history.back();
+		</script>
+	</span>
+	
+</body>
+</html>

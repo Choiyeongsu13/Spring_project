@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>오류 알림</title>
+<style>
+	body { margin:0; font-family:돋움, Verdana; font-size:9pt; }
+	/* 뒤 화면을 어둡게 가리는 배경 */
+	.overlay {
+		position:fixed; top:0; left:0; width:100%; height:100%;
+		background:rgba(0,0,0,0.4);
+		display:flex; align-items:center; justify-content:center;
+	}
+	/* 팝업 창 */
+	.popup {
+		width:330px; background:#ffffff;
+		border:1px solid #7AAAD5; box-shadow:0 4px 12px rgba(0,0,0,0.3);
+	}
+	.popup-title {
+		background:#7AAAD5; color:#ffffff; font-weight:bold;
+		text-align:center; padding:6px;
+	}
+	.popup-body {
+		padding:20px 15px; text-align:center; line-height:1.6em;
+		word-break:keep-all;
+	}
+	.popup-btn {
+		text-align:center; padding:0 0 15px 0;
+	}
+	.popup-btn button {
+		background:#7AAAD5; color:#ffffff; border:0;
+		padding:5px 20px; cursor:pointer; font-size:9pt;
+	}
+</style>
+</head>
+<body>
+
+<div class="overlay">
+	<div class="popup">
+		<div class="popup-title">오류 알림</div>
+		<div class="popup-body">
+			<span th:text="${errorMessage != null ? errorMessage : '요청을 처리하는 중 오류가 발생했습니다'}">오류 메시지</span>
+		</div>
+		<div class="popup-btn">
+			<button type="button" id="btnBack">확인</button>
+		</div>
+	</div>
+</div>
+
+<script>
+	//확인 버튼 → 이전 화면으로 이동 (이전 기록이 없으면 메인으로)
+	function goBack(){
+		if(history.length > 1){
+			history.back();
+		}else{
+			location.href = "/";
+		}
+	}
+	document.getElementById("btnBack").onclick = goBack;
+	//Enter, ESC 키로도 닫기
+	document.onkeydown = function(e){
+		if(e.key === "Enter" || e.key === "Escape") goBack();
+	};
+	document.getElementById("btnBack").focus();
+</script>
+
+</body>
+</html>

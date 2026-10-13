@@ -1,11 +1,40 @@
 <!-- 메뉴 include -->
 	<th:block th:replace="~{Include/topmenu}"></th:block>
 
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
    <head><title> 자료 올리기 </title>
-   </head> 
+   <link rel="stylesheet" type="text/css" href="/stylesheet.css">
+<script>
+	function pds_send(){
+		if(!pds.name.value){
+			alert("글쓴이를 입력하세요");
+			pds.name.focus();
+			return;
+		}
+		if(!pds.subject.value){
+			alert("제목을 입력하세요");
+			pds.subject.focus();
+			return;
+		}
+		if(!pds.contents.value){
+			alert("내용을 입력하세요");
+			pds.contents.focus();
+			return;
+		}
+		if(!pds.filename.value){
+			alert("첨부할 파일을 선택하세요");
+			return;
+		}
+		if(!pds.pass.value){
+			alert("비밀번호를 입력하세요");
+			pds.pass.focus();
+			return;
+		}
+		pds.submit();
+	}
+</script>
+   </head>
 <body>
-<link rel="stylesheet" type="text/css" href="stylesheet.css">
 
 <table border="0" width="800">
  <tr>
@@ -20,18 +49,20 @@
      <img src="/Images/img/bullet-03.gif"><font size="2" face="돋움" color="orange"> 잠깐</font> &nbsp;
      <img src="/Images/img/bullet-02.gif"><font size="2" face="돋움">는 필수 입력 사항입니다.</font><p>
 
+	<!-- 파일 업로드는 반드시 enctype="multipart/form-data" -->
+	<form name="pds" method="post" th:action="@{/Pds/pds_write}" enctype="multipart/form-data">
 	  <table border="0" >
 		<tr>
          <td width="5%" align="right"><img src="/Images/img/bullet-02.gif"></td>
          <td width="15%"><font size="2" face="돋움">글쓴이</font></td>
          <td width="80%">
-			<input type="text" size="20" name="name"></td>
+			<input type="text" size="20" name="name" th:value="${session.user != null ? session.user.name : ''}"></td>
 		</tr>
-		<tr> 
+		<tr>
 		  <td align="right">&nbsp;</td>
           <td><font size="2" face="돋움">메일주소</font></td>
 		  <td><input type="text" size="20" name="email"></td>
-		</tr>	
+		</tr>
        <tr>
          <td align="right"><img src="/Images/img/bullet-02.gif"></td>
          <td><font size="2" face="돋움">제목</font></td>
@@ -46,27 +77,25 @@
 		  <td align="right"><img src="/Images/img/bullet-02.gif"></td>
 		  <td><font size="2" face="돋움">파일첨부</font></td>
 		  <td><input type="file" name="filename" size="30"></td></tr>
-		<tr>
        <tr>
          <td align="right"><img src="/Images/img/bullet-02.gif"></td>
          <td><font size="2" face="돋움">비밀번호</font></td>
-          <td><input type="password" size="10" name="pass" > 
+          <td><input type="password" size="10" name="pass" >
           <font size="2" face="돋움">*.게시글의 수정 및 삭제시 필요.</font>
          </td>
         </tr>
-
-		<tr></tr>			<tr></tr>
+		<tr>
           <td align="right">&nbsp;</td>
           <td><font size="2">&nbsp;</font></td>
           <td align=center>
-			<img src="/Images/img/purple_save.gif" width="56" height="18" border="0">
-			<img src="/Images/img/purple_cancle.gif" width="56" height="18" border="0">
-
+			<img src="/Images/img/purple_save.gif" width="56" height="18" border="0" style="cursor:pointer" onClick="pds_send()">
+			<img src="/Images/img/purple_cancle.gif" width="56" height="18" border="0" style="cursor:pointer" onClick="history.back()">
 		  </td>
         </tr>
       </table>
+	</form>
     </td>
   </tr>
  </table>
-</body>		
+</body>
 </html>
