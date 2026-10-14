@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>자료 삭제</title>
+<title>Insert title here</title>
 </head>
 <body>
-	<span th:if="${row == 1}">
-		<script th:inline="javascript">
+	<div th:if="${row==1}">
+		<script>
 			alert("삭제되었습니다");
-			opener.location.replace("/Pds/pds_list?page=" + [[${page}]]);
+			opener.location.replace("/Pds/pds_list?page=[[${page}]]");
 			self.close();
 		</script>
-	</span>
-	<span th:if="${row == 0}">
+	</div>
+	
+	<div th:if="${row==0}">
 		<script>
-			alert("비밀번호가 일치하지 않습니다");
+			alert("비밀번호를 확인하세요");
 			history.back();
-		</script>
-	</span>
+		</script>	
+	</div>
+
 </body>
 </html>

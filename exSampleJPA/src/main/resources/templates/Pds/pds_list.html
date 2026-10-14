@@ -1,14 +1,25 @@
 <!-- 메뉴 include -->
-	<th:block th:replace="~{Include/topmenu}"></th:block>
+<th:block th:replace="~{Include/topmenu}"></th:block>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
    <head>
       <title> 자료실 리스트 보기 </title>
-	<link rel="stylesheet" type="text/css" href="/stylesheet.css">
+	
 	<style type="text/css">
 		a.list {text-decoration:none;color:black;font-size:10pt;}
 	</style>
-   </head>
+	<script>
+	function pds_search(){
+		if(!pds.key.value){
+			alert("검색어를 입력하세요");
+			pds.key.focus();
+			return;
+		}
+		pds.submit();
+	}
+</script>
+	
+   </head> 
 
 <!-- 제목 부분 출력 -->
 <body bgcolor="#FFFFFF" topmargin="0" leftmargin="0">
@@ -17,11 +28,10 @@
       <td width="20%" height="500" valign="top" bgcolor="#ecf1ef">
 
 		<!--  다음에 추가할 부분 -->
-	<th:block th:replace="~{Include/login_form}"></th:block>
-
+		<th:block th:replace="~{Include/login_form}"></th:block>
 	</td>
 
-	  <td width="80%" valign="top">
+	  <td width="80%" valign="top">	
     <br>
     <table border="0" cellspacing="1" width="100%" align="center">
       <tr>
@@ -30,7 +40,7 @@
         <img src="/Images/img/bullet-01.gif"> <b>참 좋은 자료들</b></font></td></tr>
       <tr>
         <td colspan="7" align="right" valign="middle" height="20">
-		  <font size="2" face="고딕">전체 : <b th:text="${totCount}">0</b>건 </font>
+		  <font size="2" face="고딕">전체 : <b th:text="${totcount}"></b>건 </font>
 		</td>
 	  </tr>
 	  <tr bgcolor="e3e9ff">
@@ -40,89 +50,60 @@
         <td width="10%" align="center" height="20"><font face="돋움" size="2">올린이</font></td>
         <td width="11%" align="center" height="20"><font face="돋움" size="2">날짜</font></td>
         <td width="5%" align="center" height="20"><font face="돋움" size="2">조회</font></td></tr>
-
-      <tr th:each="pds : ${pList}" onMouseOver="style.backgroundColor='#D1EEEE'" onMouseOut="style.backgroundColor=''">
+		<!-- pds:DTO 변수, pdsStatus : 상태변수) -->
+      <tr th:each="pds,pdsStatus : ${pList}" onMouseOver="style.backgroundColor='#D1EEEE'" onMouseOut="style.backgroundColor=''">
         <td align="center" height="25">
-        <font face="돋움" size="2" color="#000000" th:text="${pds.idx}"></font></td>
+        <font face="돋움" size="2" color="#000000" th:text="${pdsStatus.count}"></font></td>
 		<td align="left" height="20">&nbsp;
-			<font face="돋움" size="2">
-			<a class="list" th:href="@{/Pds/pds_view(idx=${pds.idx},page=${page})}" th:text="${pds.subject}"></a>
-			</font></td>
-        <td align="center" height="20"><font face="돋움" size="2">
-        	<th:block th:if="${pds.filename != null and pds.filesize >= 0}">
-        		<a class="list" th:href="@{/Pds/pds_download(idx=${pds.idx})}" th:text="${pds.filename}"></a>
-        		(<span th:text="${pds.filesizeText}"></span>)
-        	</th:block>
-        	<!-- 예전 자료 : 파일이름만 있고 서버에 파일이 없음 -->
-        	<span th:if="${pds.filename != null and pds.filesize < 0}" th:text="${pds.filename}"></span>
-        	<th:block th:if="${pds.filename == null}">&nbsp;</th:block>
-        </font></td>
-		<td align="center" height="20"><font face="돋움" size="2" th:text="${pds.name}"></font></td>
-		<td align="center" height="20"><font face="돋움" size="2" th:text="${#temporals.format(pds.regdate,'yyyy-MM-dd')}"></font></td>
-		<td align="center" height="20"><font face="돋움" size="2" th:text="${pds.readcnt}"></font></td>
-	  </tr>
-	  <tr th:if="${pList.totalElements == 0}">
-	  	<td colspan="6" align="center" height="40"><font face="돋움" size="2">등록된 자료가 없습니다.</font></td>
-	  </tr>
-	</table>
-
-	 j<div align="center">
+		   <font face="돋움" size="2">
+		      <a class="list" th:href="@{/Pds/pds_view(idx=${pds.idx},page=${page})}" th:text="${pds.subject}"></a>
+		   </font>
+		  </td>
+        <td align="center" height="20"><font face="돋움" size="2" th:text="${pds.filename}"></td>
+		<td align="left" height="20"><font face="돋움" size="2" th:text="${pds.name}"></font></td>
+		<td align="left" height="20"><font face="돋움" size="2" th:text="${#strings.substring(pds.regdate,0,10)}"></font></td>
+		<td align="center" height="20"><font face="돋움" size="2" th:text="${pds.readcnt}"></font></td> 	      
+	  </tr>  	
+	     
+	 <div align="center">
         <table width="700" border="0" cellspacing="0" cellpadding="5">
-          <tr>
-             <td colspan="5">
-                <div align="center">
-                	<a th:if="${pList.hasPrevious()}"
-                		th:href="@{/Pds/pds_list(page=${pList.number-1},search=${search},key=${key})}">이전</a>
-                	<span th:if="${pList.totalPages > 0}">
-                		[[${pList.number+1}]] / [[${pList.totalPages}]]
-                	</span>
-                	<a th:if="${pList.hasNext()}"
-                		th:href="@{/Pds/pds_list(page=${pList.number+1},search=${search},key=${key})}">다음</a>
-                </div>
+          <tr>&nbsp;</tr><tr>
+             <td colspan="5">        
+                <div align="center">[1][2][3]</div>
 			  </td>
 			 </tr>
 		</table>
-	 </div>
 
 	<table width="600">
 		<tr>
 			<td width="25%"> &nbsp;</td>
 			<td width="50%" align="center">
-				<form name="pds" method="post" action="/Pds/pds_list">
 				<table>
+					<form name="pds" method="post" action="/Pds/pds_list">	
+					<input type="hidden" name="page" th:value="${page}">
 					<!-- 검색어를 이용하여 글제목, 작성자, 글내용 중에 하나를 입력 받아 처리하기 위한 부분 -->
 						<tr>
 							<td>
 								<select name="search">
-									<option value="subject" th:selected="${search == 'subject'}">글제목</option>
-									<option value="name" th:selected="${search == 'name'}">작성자</option>
-									<option value="contents" th:selected="${search == 'contents'}">글내용</option>
+									<option value="subject" >글제목</option>
+									<option value="name" >작성자</option>
+									<option value="contents" >글내용</option>
 								</select>
 							</td>
-							<td> <input type="text" size=20 name="key" th:value="${key}"></td>
-							<td> <a href="javascript:pds_search()"><img src="/Images/img/search2.gif" border="0"></a></td>
+							<td> <input type="text" size=20 name="key"></td>
+							<td> 
+								<a href="javascript:pds_search()"><img src="/Images/img/search2.gif" border="0"></a>
+							<!-- <a th:onclick="pds_search()"><img src="/Images/img/search2.gif" border="0"></a>  -->
+							</td>
 						</tr>
+					</form>
 				</table>
-				</form>
 			</td>
 			<td width="25%" align="right">
-			<a href="/Pds/pds_write"><img src="/Images/img/write.gif" border="0"></a>
+			<a th:href="@{pds_write(page=${page})}"><img src="/Images/img/write.gif" border="0"></a>
 			</td>
 		</tr>
 	</table>
-	  </td>
-	</tr>
-  </table>
 </body>
 </html>
 
-<script>
-	function pds_search(){
-		if(pds.key.value==""){
-			alert("검색어를 입력하세요");
-			pds.key.focus();
-			return;
-		}
-		pds.submit();
-	}
-</script>

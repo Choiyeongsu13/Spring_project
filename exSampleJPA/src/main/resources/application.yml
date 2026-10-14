@@ -16,3 +16,11 @@ spring:
       hibernate:
         format_sql: true
         use_sql_comments: true
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 50MB
+
+file:
+ dir: C:/Users/컴퓨터/Documents/Zoom/ # 끝에 / 필수 (fileDir+fileName 으로 경로를 만듦)

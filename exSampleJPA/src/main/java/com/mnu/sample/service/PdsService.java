@@ -1,19 +1,10 @@
 package com.mnu.sample.service;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.UUID;
+import java.util.Comparator;
+import java.util.List;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.mnu.sample.dto.PdsRequestDTO;
 import com.mnu.sample.dto.PdsResponseDTO;
@@ -23,89 +14,86 @@ import com.mnu.sample.repository.PdsRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
-@Transactional
+@RequiredArgsConstructor //Bean 주입
 public class PdsService {
 	private final PdsRepository pdsRepository;
-
-	//업로드 파일 저장 폴더 (기본: 프로젝트폴더/upload/pds)
-	@Value("${pds.upload-dir:${user.dir}/upload/pds}")
-	private String uploadDir;
-
-	//목록(검색 + 페이지)
-	public Page<PdsResponseDTO> pdsListSearchPage(String search, String key, Pageable pageable) {
-		Page<PdsEntity> page;
-		if(key != null && !key.equals("")) {
-			//검색 O
-			page = pdsRepository.pdsListSearchPage(search, key, pageable);
-		}else {
-			//검색 X -> idx 내림차순
-			Pageable sortedPageable = PageRequest.of(
-					pageable.getPageNumber(),
-					pageable.getPageSize(),
-					Sort.by(Sort.Direction.DESC, "idx"));
-			page = pdsRepository.findAll(sortedPageable);
-		}
-		return page.map(this::toResponse);
+	
+	// 카운트(전체 게시글 수)
+	@Transactional
+	public long pdsCount() {
+		return pdsRepository.count();
 	}
 
-	//entity -> dto (저장된 파일의 크기 포함)
-	private PdsResponseDTO toResponse(PdsEntity pds) {
-		long filesize = -1;
-		if(pds.getSavename() != null) {
-			File file = new File(uploadDir, pds.getSavename());
-			if(file.exists()) filesize = file.length();
-		}
-		return new PdsResponseDTO(pds, filesize);
+	// 전체 목록(검색, 페이지 처리 없음)
+	@Transactional
+	public List<PdsResponseDTO> pdsList(){
+		return pdsRepository.findAll()
+				.stream()
+				// Pds 엔티티의 getIdx()를 기준으로 내림차순(reversed) 정렬
+	            //.sorted(Comparator.comparing(PdsEntity::getIdx).reversed())
+				// Pds 엔티티의 등록일자getRegdate()를 기준으로 내림차순(reversed) 정렬
+	            .sorted(Comparator.comparing(PdsEntity::getRegdate).reversed())
+				.map(PdsResponseDTO::new)
+				//.collect(Collectors.toList());
+				.toList();//JDK 16이상
+		// PdsRepository결과로 넘어온 PdsEntity의 Stream을 map을 통해 PdsReponseDto로 변환 
+        //   -> List로 반환하는 메서드
 	}
 
-	//등록처리(파일 저장 + DB 저장)
-	public int pdsWrite(PdsRequestDTO pds, MultipartFile file) throws IOException {
-		String filename = null;
-		String savename = null;
-
-		//첨부파일이 있으면 서버 폴더에 저장
-		if(file != null && !file.isEmpty()) {
-			File dir = new File(uploadDir);
-			if(!dir.exists()) dir.mkdirs();
-
-			filename = new File(file.getOriginalFilename()).getName(); //경로 제거한 원래 이름
-			savename = UUID.randomUUID() + "_" + filename;			//같은 이름 파일 덮어쓰기 방지
-			file.transferTo(new File(dir, savename));
-		}
-		return pdsRepository.save(pds.toEntity(filename, savename)).getIdx();
+	// 등록 처리
+	@Transactional
+	public int pdsWrite(PdsRequestDTO pdsRequestDTO){
+		//DTO을 Entity로 변환후 저장
+		return pdsRepository.save(pdsRequestDTO.toEntity()).getIdx();
+		//등록후 등록된 idx 반환
 	}
-
-	//상세보기(조회수 증가)
+	
+	// 글 상세보기
+	@Transactional
 	public PdsResponseDTO pdsView(int idx) {
+		//조회수 증가
 		pdsRepository.pdsHits(idx);
+		
 		PdsEntity pdsEntity = pdsRepository.findById(idx)
 				.orElseThrow(()->new IllegalArgumentException("idx 없음"));
-		return toResponse(pdsEntity);
+		
+		PdsResponseDTO pds = new PdsResponseDTO(pdsEntity);
+		return pds;
 	}
 
-	//다운로드할 파일
-	public PdsEntity pdsFile(int idx) {
-		return pdsRepository.findById(idx)
-				.orElseThrow(()->new IllegalArgumentException("idx 없음"));
+/*	
+	//글 삭제(무조건 삭제시 : 비밀번호 관계없이)
+	@Transactional
+	public void pdsDelete(int idx) {
+		pdsRepository.deleteById(idx);//idx에 해다하는 글 삭제
 	}
-	public Resource pdsResource(PdsEntity pds) {
-		if(pds.getSavename() == null) return null;
-		Resource resource = new FileSystemResource(new File(uploadDir, pds.getSavename()));
-		return resource.exists() ? resource : null;
-	}
-
-	//삭제(비번이 맞으면 DB + 파일 삭제) : 성공 1, 비번오류 0
+*/
+	//글 삭제(idx, pass 이용)
+	@Transactional
 	public int pdsDelete(int idx, String pass) {
-		PdsEntity pds = pdsRepository.findById(idx)
+		return pdsRepository.pdsDelete(idx, pass);//idx에 해당하는 글 삭제
+	}
+
+	//수정폼(조회수 증가 없이 조회)
+	@Transactional
+	public PdsResponseDTO pdsModify(int idx) {
+		PdsEntity pdsEntity = pdsRepository.findById(idx)
 				.orElseThrow(()->new IllegalArgumentException("idx 없음"));
-		if(!pds.getPass().equals(pass)) {
+		return new PdsResponseDTO(pdsEntity);
+	}
+
+	//수정처리(비밀번호가 같을때만 수정 : 성공 1, 비번오류 0)
+	@Transactional
+	public int pdsModifyPro(int idx, PdsRequestDTO pds) {
+		PdsEntity pdsEntity = pdsRepository.findById(idx)
+				.orElseThrow(()->new IllegalArgumentException("idx 없음"));
+		if(!pdsEntity.getPass().equals(pds.getPass())) {
 			return 0;
 		}
-		pdsRepository.delete(pds);
-		if(pds.getSavename() != null) {
-			new File(uploadDir, pds.getSavename()).delete();
-		}
+		//@Transactional -> 변경 감지로 update
+		pdsEntity.pdsUpdate(pds.getSubject(), pds.getContents(), pds.getFilename());
 		return 1;
 	}
+
+
 }

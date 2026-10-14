@@ -17,32 +17,38 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class PdsEntity {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tbl_pds_seq_idx_GENERATOR")
 	@SequenceGenerator(name="tbl_pds_seq_idx_GENERATOR", sequenceName = "tbl_pds_seq_idx", initialValue=1, allocationSize=1)
+	//MySQL일 경우
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idx;
-
 	private String name;
-	private String email;
 	private String pass;
 	private String subject;
 	private String contents;
-	private String filename;	//사용자가 올린 원래 파일이름(화면 출력용)
-	private String savename;	//서버에 저장된 파일이름(중복 방지용 UUID_원래이름)
-	//파일 크기는 기존 tbl_pds에 컬럼이 없어서 저장된 파일에서 직접 읽음(PdsService)
+	private String filename;			
+	//private String storedFileName;   // 서버에 저장된 파일명 (UUID 적용)
+	private int readcnt;
 	private LocalDateTime regdate = LocalDateTime.now();
-	private Integer readcnt = 0;
-
+	private LocalDateTime updatedate;
+	
 	@Builder
-	public PdsEntity(String name, String email, String pass, String subject, String contents,
-						String filename, String savename) {
+	public PdsEntity(String name, String pass, String subject, String contents, String filename) {
 		this.name=name;
-		this.email=email;
 		this.pass=pass;
 		this.subject=subject;
 		this.contents=contents;
 		this.filename=filename;
-		this.savename=savename;
+	}
+
+	//수정 메소드(새 첨부파일이 없으면 filename은 그대로)
+	public void pdsUpdate(String subject, String contents, String filename) {
+		this.subject=subject;
+		this.contents=contents;
+		if(filename != null) {
+			this.filename=filename;
+		}
+		this.updatedate=LocalDateTime.now();
 	}
 }
