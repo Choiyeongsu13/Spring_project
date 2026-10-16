@@ -1,8 +1,11 @@
 package com.mnu.sample.service;
 
-import java.util.Comparator;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +27,7 @@ public class PdsService {
 		return pdsRepository.count();
 	}
 
+/*
 	// 전체 목록(검색, 페이지 처리 없음)
 	@Transactional
 	public List<PdsResponseDTO> pdsList(){
@@ -39,7 +43,7 @@ public class PdsService {
 		// PdsRepository결과로 넘어온 PdsEntity의 Stream을 map을 통해 PdsReponseDto로 변환 
         //   -> List로 반환하는 메서드
 	}
-
+*/
 	// 등록 처리
 	@Transactional
 	public int pdsWrite(PdsRequestDTO pdsRequestDTO){
@@ -73,27 +77,110 @@ public class PdsService {
 	public int pdsDelete(int idx, String pass) {
 		return pdsRepository.pdsDelete(idx, pass);//idx에 해당하는 글 삭제
 	}
+	
+	//글 수정
+	@Transactional
+	public int pdsModify(int idx, PdsRequestDTO pdsRequestDTO) {
+		return pdsRepository.pdsModify(idx, pdsRequestDTO.getSubject(), 
+				pdsRequestDTO.getContents(), pdsRequestDTO.getFilename(), 
+				pdsRequestDTO.getPass());
+	}
+	
 
-	//수정폼(조회수 증가 없이 조회)
+	// 전체 목록(검색 X, 페이지 처리 )
+	@Transactional
+	public Page<PdsResponseDTO> pdsList(Pageable pageable){
+		// 기존 pageable의 페이지 번호와 사이즈를 유지하면서, 정렬 조건만 idx 내림차순으로 덮어씁니다.
+	    Pageable sortedPageable = PageRequest.of(
+	        pageable.getPageNumber(), 
+	        pageable.getPageSize(), 
+	        Sort.by(Sort.Direction.DESC, "idx")
+	    );
+	    
+		Page<PdsEntity> page;
+		//page = pdsRepository.findAll(pageable);//오름차순
+		page = pdsRepository.findAll(sortedPageable);
+		return page.map(PdsResponseDTO::new);
+	}
+	
+	// 전체 목록(검색 , 페이지 처리 )
+	@Transactional
+	public Page<PdsResponseDTO> pdsListSearchPage(String search, String key, Pageable pageable){
+		// 기존 pageable의 페이지 번호와 사이즈를 유지하면서, 정렬 조건만 idx 내림차순으로 덮어씁니다.
+	    Pageable sortedPageable = PageRequest.of(
+	        pageable.getPageNumber(), 
+	        pageable.getPageSize(), 
+	        Sort.by(Sort.Direction.DESC, "idx")
+	    );
+	    
+		Page<PdsEntity> page;
+		if(key != null && !key.equals("")) {
+			//검색 O
+			page = pdsRepository.pdsListSearchPage(search, key, pageable);
+		}else {
+			//검색 X
+			//page = pdsRepository.findAll(pageable);//오름차순
+			page = pdsRepository.findAll(sortedPageable);
+		}
+		return page.map(PdsResponseDTO::new);
+	}
+
+	
+
+	//수정폼(modify)
 	@Transactional
 	public PdsResponseDTO pdsModify(int idx) {
 		PdsEntity pdsEntity = pdsRepository.findById(idx)
 				.orElseThrow(()->new IllegalArgumentException("idx 없음"));
-		return new PdsResponseDTO(pdsEntity);
+	          //.orElseThrow(() -> new CustomException("존재하지 idx입니다."));
+		      // 위로 던지기(비스에서는 예외를 try-catch로 잡아서 해결하려고 하지 말고, 
+		      //상황에 맞는 CustomException으로 전환하여 컨트롤러 방향으로 던집니다.
+		PdsResponseDTO pds = new PdsResponseDTO(pdsEntity);
+		return pds;
 	}
-
-	//수정처리(비밀번호가 같을때만 수정 : 성공 1, 비번오류 0)
+	
+	
+	// 조건에 맞는 글수 카운트
 	@Transactional
-	public int pdsModifyPro(int idx, PdsRequestDTO pds) {
-		PdsEntity pdsEntity = pdsRepository.findById(idx)
-				.orElseThrow(()->new IllegalArgumentException("idx 없음"));
-		if(!pdsEntity.getPass().equals(pds.getPass())) {
+	public long pdsCountSearch(String search, String key) {
+		switch(search) {
+		case "name":
+			return pdsRepository.countByNameContaining(key);
+		case "subject":
+			return pdsRepository.countBySubjectContaining(key);
+		case "contents":
+			return pdsRepository.countByContentsContaining(key);
+		default:
 			return 0;
 		}
-		//@Transactional -> 변경 감지로 update
-		pdsEntity.pdsUpdate(pds.getSubject(), pds.getContents(), pds.getFilename());
-		return 1;
+	}
+	
+	//조건에 맞는 게시글 목록
+	@Transactional
+	public List<PdsResponseDTO> pdsListSearch(String search, String key){
+		switch(search) {
+		case "name":
+			return pdsRepository.findByNameContaining(key)
+					.stream()
+					.map(PdsResponseDTO::new)
+					.toList();
+			//PdsRepository결과로 넘어온 Entity의 stream을 map을 통해 list로 변환
+		case "subject":
+			return pdsRepository.findBySubjectContaining(key)
+					.stream()
+					.map(PdsResponseDTO::new)
+					.toList();
+			//PdsRepository결과로 넘어온 Entity의 stream을 map을 통해 list로 변환
+		case "contents":
+			return pdsRepository.findByContentsContaining(key)
+					.stream()
+					.map(PdsResponseDTO::new)
+					.toList();
+			//PdsRepository결과로 넘어온 Entity의 stream을 map을 통해 list로 변환
+		default:
+			return null;
+		}
 	}
 
-
+	
 }

@@ -41,14 +41,4 @@ public class PdsEntity {
 		this.contents=contents;
 		this.filename=filename;
 	}
-
-	//수정 메소드(새 첨부파일이 없으면 filename은 그대로)
-	public void pdsUpdate(String subject, String contents, String filename) {
-		this.subject=subject;
-		this.contents=contents;
-		if(filename != null) {
-			this.filename=filename;
-		}
-		this.updatedate=LocalDateTime.now();
-	}
 }

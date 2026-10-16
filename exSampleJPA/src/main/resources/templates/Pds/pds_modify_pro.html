@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>자료 수정</title>
+<title>Insert title here</title>
 </head>
 <body>
-	<span th:if="${row == 1}">
-		<script th:inline="javascript">
-			alert("수정되었습니다");
-			location.replace("/Pds/pds_view?idx=" + [[${idx}]] + "&page=" + [[${page}]]);
+	<span th:if="${row==1}">
+		<script>
+			location.replace("/Pds/pds_list?page=[[${page}]]");
 		</script>
 	</span>
-	<span th:if="${row == 0}">
+	<span th:if="${row==0}">
 		<script>
-			alert("비밀번호가 일치하지 않습니다");
+			alert("비번오류입니다");
 			history.back();
 		</script>
 	</span>
+	
 </body>
 </html>

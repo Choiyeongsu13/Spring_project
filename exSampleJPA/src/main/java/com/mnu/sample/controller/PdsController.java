@@ -11,6 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,13 +48,53 @@ public class PdsController {
 	private String fileDir;
 	
 	private final PdsService pdsService;//서비스 주입
-	
+/*	
 	//전체(검색 X, 페이지 X)
 	@GetMapping("pds_list")
 	public String pdsList(@ModelAttribute("page") int page, Model model) {
 		log.info("Pds Call : pds_list");
 		model.addAttribute("pList", pdsService.pdsList());
 		model.addAttribute("totcount", pdsService.pdsCount());
+		
+		return "/Pds/pds_list";
+	}
+*/
+	/*
+	//전체(검색 X, 페이지 O)
+	@GetMapping("pds_list")
+	public String pdsList(Model model, @PageableDefault(size=10) Pageable pageable) {
+		log.info("Pds Call : pds_list");
+		model.addAttribute("pList", pdsService.pdsList(pageable));
+		model.addAttribute("totcount", pdsService.pdsCount());
+		
+		return "/Pds/pds_list";
+	}
+
+	
+	//검색
+	@PostMapping("pds_list")
+	public String pdsListSearch(@RequestParam("search") String search, 
+									@RequestParam("key") String key, Model model) {
+		log.info("Pds Call : pds_list_search");
+		
+		model.addAttribute("pList", pdsService.pdsListSearch(search, key));
+		model.addAttribute("totcount", pdsService.pdsCountSearch(search, key));
+		
+		model.addAttribute("search", search);
+		model.addAttribute("key", key);
+		return "/Pds/pds_list";
+	}
+*/
+	//검색 + 페이지 처리 + get+post
+	@GetMapping("pds_list")
+	public String pdsListSearchPage(@ModelAttribute("page") int page, @RequestParam(value="search", required=false) String search, 
+										@RequestParam(value="key", required=false) String key, 
+											@PageableDefault(size=10) Pageable pageable, Model model) {
+
+		Page<PdsResponseDTO> result = pdsService.pdsListSearchPage(search, key, pageable);
+		model.addAttribute("pList", result);
+		model.addAttribute("search", search);
+		model.addAttribute("key", key);
 		
 		return "/Pds/pds_list";
 	}
@@ -79,11 +122,11 @@ public class PdsController {
 		//파일 저장경로 설정
 		//String path = request.getServletContext().getRealPath("/upload/");
 		MultipartFile mf = request.getFile("filename");
-		String fileName = null;
+		String fileName = mf.getOriginalFilename();
 
-		//첨부파일을 선택한 경우에만 저장 (선택 안하면 filename은 null)
-		if(mf != null && !mf.isEmpty()) {
-			fileName = mf.getOriginalFilename();
+		if(fileName == null || fileName.equals("")) {
+			fileName = null;//첨부파일 선택 안함 -> 파일 저장 안하고 filename은 null
+		}else {
 			File file = new File(fileDir+fileName);
 			try {
 				mf.transferTo(file);//파일저장(로컬 폴더 C:/Users/websnet/upload/xxxx.xxx 저장)
@@ -177,59 +220,69 @@ public class PdsController {
 			file.delete();
 		}
 		model.addAttribute("row", row);
-
+		
 		return "/Pds/pds_delete_pro";
 	}
-
+	
 	//수정 폼
+	//삭제 폼
 	@GetMapping("pds_modify")
-	public String pdsModify(@RequestParam("idx") int idx,
-						@ModelAttribute("page") int page, Model model) {
-		log.info("Pds Call : pds_modify");
-		model.addAttribute("pds", pdsService.pdsModify(idx));
+	public String pdsModify(@ModelAttribute("page") int page, 
+			@ModelAttribute("idx") int idx, Model model) {
+		log.info("Call  :  pds_modify (수정 폼)" );
+		
+		model.addAttribute("pds", pdsService.pdsView(idx));
 		return "/Pds/pds_modify";
 	}
 
 	//수정처리
 	@PostMapping("pds_modify")
-	public String pdsModifyPro(@RequestParam("idx") int idx, @ModelAttribute("page") int page,
-						MultipartHttpServletRequest request, Model model) {
-		log.info("Pds Call : pds_modify_pro");
-
+	public String pdsModifyPro(@RequestParam("page") int page, MultipartHttpServletRequest request, Model model) {
+		log.info("Pds Call : pds_modify_pro : ");
+		
 		PdsRequestDTO pdsDTO = new PdsRequestDTO();
+		pdsDTO.setName(request.getParameter("name"));
 		pdsDTO.setSubject(request.getParameter("subject"));
 		pdsDTO.setContents(request.getParameter("contents"));
 		pdsDTO.setPass(request.getParameter("pass"));
-
-		PdsResponseDTO oldPds = pdsService.pdsModify(idx);
-		//비밀번호가 틀리면 파일을 저장하지 않고 바로 돌려보냄
-		if(!oldPds.getPass().equals(pdsDTO.getPass())) {
-			model.addAttribute("row", 0);
-			return "/Pds/pds_modify_pro";
+		String oldfilename = request.getParameter("oldfilename");//구파일
+		int idx = Integer.parseInt(request.getParameter("idx"));//기본키
+		
+		//파일 저장경로 설정
+		//String path = request.getServletContext().getRealPath("/upload/");
+		MultipartFile mf = request.getFile("filename");
+		String fileName = mf.getOriginalFilename();
+		
+		if(oldfilename != null && oldfilename.equals("")) {
+			oldfilename = null;//기존 첨부파일 없음
 		}
 
-		//새 첨부파일을 선택한 경우에만 저장
-		MultipartFile mf = request.getFile("filename");
-		if(mf != null && !mf.isEmpty()) {
-			String fileName = mf.getOriginalFilename();
-			File file = new File(fileDir+fileName);
+		if(fileName.equals("")) {
+			pdsDTO.setFilename(oldfilename);
+		}else {
+			File newFile=new File(fileDir+fileName);
 			try {
-				mf.transferTo(file);
+				mf.transferTo(newFile);
 			}catch(Exception e) {
 				e.printStackTrace();
 			}
 			pdsDTO.setFilename(fileName);
 		}
 
-		int row = pdsService.pdsModifyPro(idx, pdsDTO);
-		//파일이 바뀌었으면 이전 파일 삭제
-		if(row == 1 && pdsDTO.getFilename() != null && oldPds.getFilename() != null
-				&& !oldPds.getFilename().equals(pdsDTO.getFilename())) {
-			new File(fileDir + oldPds.getFilename()).delete();
+		int row = pdsService.pdsModify(idx, pdsDTO);
+		//수정성공시 1 / 실패시 0
+		//구파일 삭제는 수정 성공(비번 일치)후에만, 비번이 틀리면 방금 올린 새 파일을 삭제
+		if(!fileName.equals("") && !fileName.equals(oldfilename)) {
+			String delName = (row == 1) ? oldfilename : fileName;
+			if(delName != null) {
+				new File(fileDir+delName).delete();// 파일삭제
+			}
 		}
 		model.addAttribute("row", row);
-		model.addAttribute("idx", idx);
+		model.addAttribute("page", page);
 		return "/Pds/pds_modify_pro";
 	}
-
+	
+	
+	
 }

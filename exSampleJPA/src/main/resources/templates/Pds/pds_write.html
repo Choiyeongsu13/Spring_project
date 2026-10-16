@@ -22,7 +22,51 @@
 		alert("저장합니다");
 		pds.submit();
 	}
+/*
+ *  jQuery 사용시
+ 
+	$(document).ready(function() {	
+		$("#btn_send").click(function(){
+			
+			if($("#name").val()==''){
+				alert("이름을 입력하세요");
+				$("#name").focus();
+				return;
+			}
+			if($("#subject").val()==''){
+				alert("제목을 입력하세요");
+				$("#subject").focus();
+				return;
+			}
+			if($("#contents").val()==''){
+				alert("내용을 입력하세요");
+				$("#contents").focus();
+				return;
+			}
+			//파일 선택시
+			if($("#filename").val()){
+				var size = $("#filename")[0].files[0].size;
+				if(size>(2*1024*1024)){
+					alert("파일용량은 2M을 초과할수 없습니다");
+					$("#filename").focus();
+				}
+			}
+			
+			if($("#pass").val()==''){
+				alert("비밀번호을 입력하세요");
+				$("#pass").focus();
+				return;
+			}
+			
+			$("#pds").submit();
+		});
+		
+		$("#btn_cancle").click(function(){
+			history.back();
+		});
 
+	});
+*/
 </script>   
    
    </head> 
